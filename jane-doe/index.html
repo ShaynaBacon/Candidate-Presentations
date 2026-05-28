@@ -954,10 +954,10 @@ btn.style.cursor = "pointer";
 document.body.appendChild(btn);
 </script>
 
- <script>
+<script>
 let editMode = false;
 
-// ✅ All editable areas
+// ✅ ALL editable areas
 const editableSelectors = `
 .name, .role, .headline,
 .stat-card, .skill-pill,
@@ -967,7 +967,7 @@ const editableSelectors = `
 `;
 
 // ✅ EDIT MODE
-function toggleEditMode(){
+function toggleEditMode() {
   editMode = !editMode;
 
   document.querySelectorAll(editableSelectors).forEach(el => {
@@ -975,13 +975,10 @@ function toggleEditMode(){
     el.style.outline = editMode ? "2px dashed #C9A84C" : "none";
   });
 }
-// ✅ NOW THIS COMES AFTER function exists
- btn.onclick = () => toggleEditMode();
-  ``
-// ✅ SAVE
-function saveEdits(){
-  const data = [];
 
+// ✅ SAVE
+function saveEdits() {
+  const data = [];
   document.querySelectorAll(editableSelectors).forEach(el => {
     data.push(el.innerHTML);
   });
@@ -991,20 +988,19 @@ function saveEdits(){
 }
 
 // ✅ LOAD
-function loadEdits(){
+function loadEdits() {
   const saved = JSON.parse(localStorage.getItem("candidateEdits"));
-
-  if(!saved) return;
+  if (!saved) return;
 
   document.querySelectorAll(editableSelectors).forEach((el, i) => {
-    if(saved[i]){
+    if (saved[i]) {
       el.innerHTML = saved[i];
     }
   });
 }
 
 // ✅ EXPORT
-function exportHTML(){
+function exportHTML() {
   const html = document.documentElement.outerHTML;
   const blob = new Blob([html], { type: "text/html" });
 
@@ -1014,43 +1010,18 @@ function exportHTML(){
   link.click();
 }
 
-// ✅ CREATE BUTTONS
-function createButtons(){
-
-  const edit = createBtn("Edit Mode", "20px", toggleEditMode);
-  const save = createBtn("Save", "70px", saveEdits);
-  const exportBtn = createBtn("Export File", "120px", exportHTML);
-
-  document.body.appendChild(edit);
-  document.body.appendChild(save);
-  document.body.appendChild(exportBtn);
-}
-
-function createBtn(text, top, action){
+// ✅ CREATE BUTTON HELPER
+function createBtn(text, top, action) {
   const btn = document.createElement("button");
 
   btn.innerText = text;
   btn.style.position = "fixed";
-  btn.style.right = "20px";
   btn.style.top = top;
+  btn.style.right = "20px";
   btn.style.zIndex = "999";
   btn.style.padding = "10px 14px";
   btn.style.background = "#C9A84C";
-  btn.style.border = "none";
-  btn.style.borderRadius = "20px";
-  btn.style.cursor = "pointer";
 
-  btn.onclick = action;
-
-  return btn;
-}
-
-// ✅ INIT
-window.addEventListener("load", () => {
-  createButtons();
-  loadEdits();
-});
-</script>
 
 </body>
 </html>
