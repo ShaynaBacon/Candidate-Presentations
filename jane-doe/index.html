@@ -955,10 +955,10 @@ btn.onclick = toggleEditMode;
 document.body.appendChild(btn);
 </script>
 
- <script>
+<script>
 let editMode = false;
 
-// ✅ TARGET EVERYTHING YOU WANT EDITABLE
+// ✅ TARGET TEXT ELEMENTS
 const editableSelectors = `
 .name, .role, .headline,
 .stat-card, .skill-pill,
@@ -967,7 +967,7 @@ const editableSelectors = `
 .closing-tagline, li
 `;
 
-// ✅ TOGGLE EDIT MODE
+// ✅ EDIT MODE TOGGLE
 function toggleEditMode(){
   editMode = !editMode;
 
@@ -977,22 +977,21 @@ function toggleEditMode(){
   });
 }
 
-// ✅ AUTO-SAVE TO BROWSER
+// ✅ SAVE FUNCTION
 function saveEdits(){
-  const allContent = document.body.innerHTML;
-  localStorage.setItem("candidatePresentation", allContent);
+  localStorage.setItem("savedPresentation", document.body.innerHTML);
+  alert("✅ Saved!");
 }
 
-// ✅ LOAD SAVED VERSION
+// ✅ LOAD FUNCTION
 function loadEdits(){
-  const saved = localStorage.getItem("candidatePresentation");
+  const saved = localStorage.getItem("savedPresentation");
   if(saved){
     document.body.innerHTML = saved;
-    attachButtons(); // reattach buttons after load
   }
 }
 
-// ✅ EXPORT FILE
+// ✅ EXPORT FUNCTION
 function exportHTML(){
   const blob = new Blob([document.documentElement.outerHTML], { type: "text/html" });
   const link = document.createElement("a");
@@ -1001,22 +1000,22 @@ function exportHTML(){
   link.click();
 }
 
-// ✅ CREATE BUTTONS AUTOMATICALLY
-function attachButtons(){
+// ✅ CREATE BUTTONS (SEPARATE — NO BREAKING)
+function addButtons(){
 
   const btnEdit = document.createElement("button");
   btnEdit.innerText = "Edit Mode";
-  styleButton(btnEdit);
+  styleBtn(btnEdit, "20px");
   btnEdit.onclick = toggleEditMode;
 
   const btnSave = document.createElement("button");
   btnSave.innerText = "Save";
-  styleButton(btnSave);
+  styleBtn(btnSave, "70px");
   btnSave.onclick = saveEdits;
 
   const btnExport = document.createElement("button");
   btnExport.innerText = "Export File";
-  styleButton(btnExport);
+  styleBtn(btnExport, "120px");
   btnExport.onclick = exportHTML;
 
   document.body.appendChild(btnEdit);
@@ -1024,16 +1023,12 @@ function attachButtons(){
   document.body.appendChild(btnExport);
 }
 
-// ✅ BUTTON STYLE HELPER
-function styleButton(btn){
+// ✅ STYLE FOR BUTTONS
+function styleBtn(btn, top){
   btn.style.position = "fixed";
+  btn.style.top = top;
   btn.style.right = "20px";
   btn.style.zIndex = "999";
-
-  if(btn.innerText === "Edit Mode") btn.style.top = "20px";
-  if(btn.innerText === "Save") btn.style.top = "70px";
-  if(btn.innerText === "Export File") btn.style.top = "120px";
-
   btn.style.padding = "10px 14px";
   btn.style.background = "#C9A84C";
   btn.style.border = "none";
@@ -1041,10 +1036,10 @@ function styleButton(btn){
   btn.style.cursor = "pointer";
 }
 
-// ✅ AUTO INIT
-window.addEventListener("load", () => {
+// ✅ RUN ON LOAD (IMPORTANT)
+window.addEventListener("DOMContentLoaded", () => {
   loadEdits();
-  attachButtons();
+  addButtons();
 });
 </script>
 </body>
