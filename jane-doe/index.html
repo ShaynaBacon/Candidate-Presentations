@@ -3,91 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Candidate Presentation</title>
 
+<!-- ✅ PDF LIB -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
 <style>
-body {
+body{
   margin:0;
-  font-family: Arial;
+  font-family:'Segoe UI',sans-serif;
   background:#003B46;
   color:white;
   overflow:hidden;
 }
 
-.slide {
+.slide{
   position:absolute;
   width:100%;
   height:100%;
   display:none;
   padding:60px;
 }
+.slide.active{display:block;}
 
-.slide.active { display:block; }
+h1{font-size:60px;}
+h1 span{display:block;color:#C9A84C;}
 
-button {
-  padding:10px;
-  margin:5px;
+#role{opacity:.7;}
+#summary{margin:20px 0;max-width:500px;}
+
+textarea{
+  width:90%;
+  height:150px;
+  margin-top:10px;
 }
 
-#nav {
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
+#statsContainer,#skillsContainer{
+  margin-top:20px;
 }
 
-.stat-card {
-  background:rgba(255,255,255,0.1);
-  margin:10px;
-  padding:15px;
-  border-radius:10px;
+.stat-card{
   display:inline-block;
+  background:rgba(255,255,255,.08);
+  padding:15px;
+  margin:6px;
+  border-radius:12px;
 }
 
-.skill-pill {
+.skill-pill{
   background:#07575B;
   padding:6px 12px;
   margin:5px;
   border-radius:20px;
   display:inline-block;
 }
+
+#caseContainer{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+}
+
+.case-card{
+  background:rgba(255,255,255,.07);
+  padding:15px;
+  border-radius:12px;
+}
+
+#nav{
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+button{
+  padding:10px 14px;
+  margin:5px;
+  background:#C9A84C;
+  color:#003B46;
+  border:none;
+  border-radius:20px;
+  cursor:pointer;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ✅ DATA (ONLY ONE DATA BLOCK — DO NOT DUPLICATE) -->
-<script>
-window.data = {
-  firstName: "Srinika",
-  lastName: "Patloori",
-  role: "Senior Fullstack Developer",
-  summary: "Senior fullstack engineer with 12+ years building microservices and cloud-native systems.",
-  skills: ["Java","Spring Boot","Angular","React","AWS","Kafka"],
-  stats: [
-    "12+ Years Experience",
-    "Enterprise Full Stack",
-    "AWS + Microservices",
-    "Insurance Domain"
-  ],
-  caseStudies: [
-    {title:"AIG Platform", impact:"Built scalable insurance microservices"},
-    {title:"Amazon Systems", impact:"Designed Kafka event-driven systems"},
-    {title:"Nationwide Portal", impact:"Modernized Angular UI"}
-  ]
-};
-</script>
+<!-- ✅ SLIDE 0 (INPUT) -->
+<div class="slide active">
+  <h2>Paste Resume</h2>
+
+  <textarea id="resumeInput" placeholder="Paste resume here..."></textarea><br>
+
+  <button onclick="generateFromResume()">Generate Presentation</button>
+</div>
 
 <!-- ✅ SLIDE 1 -->
-<div class="slide active">
-  <h1 id="name"></h1>
-  <h3 id="role"></h3>
-  <p id="summary"></p>
+<div class="slide">
+  <h1><span id="firstName"></span><span id="lastName"></span></h1>
+  <div id="role"></div>
+  <div id="summary"></div>
 
-  <h3>Stats</h3>
   <div id="statsContainer"></div>
-
-  <h3>Skills</h3>
   <div id="skillsContainer"></div>
 </div>
 
@@ -99,69 +119,143 @@ window.data = {
 
 <!-- ✅ SLIDE 3 -->
 <div class="slide">
-  <h2>End</h2>
+  <h2>Recruiter Score</h2>
+  <h1 id="scoreContainer"></h1>
+
+  <h3>Strengths</h3>
+  <ul id="strengths"></ul>
+
+  <h3>Watchouts</h3>
+  <ul id="watchouts"></ul>
+
+  <h3>Recommendation</h3>
+  <p id="recommendation"></p>
 </div>
 
 <!-- ✅ NAV -->
 <div id="nav">
   <button onclick="changeSlide(-1)">Prev</button>
   <button onclick="changeSlide(1)">Next</button>
+  <button onclick="downloadPDF()">Download PDF</button>
 </div>
 
-<!-- ✅ ✅ ONE CLEAN SCRIPT ONLY -->
 <script>
 
 let slides;
-let current = 0;
+let current=0;
+let data={};
 
 function showSlide(i){
-  slides.forEach(s => s.classList.remove("active"));
+  slides.forEach(s=>s.classList.remove("active"));
   slides[i].classList.add("active");
 }
 
 function changeSlide(dir){
-  current = (current + dir + slides.length) % slides.length;
+  current=(current+dir+slides.length)%slides.length;
   showSlide(current);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
+function generateFromResume(){
 
-  slides = document.querySelectorAll('.slide');
+  const text=document.getElementById("resumeInput").value.toLowerCase();
 
-  // NAME
-  document.getElementById("name").textContent =
-    data.firstName + " " + data.lastName;
+  // ✅ VERY SIMPLE extraction logic
+  data={
+    firstName:"Candidate",
+    lastName:"Profile",
+    role: text.includes("java") ? "Java Fullstack Developer" : "Fullstack Developer",
+    summary:"Experienced developer extracted from resume input.",
 
-  document.getElementById("role").textContent = data.role;
-  document.getElementById("summary").textContent = data.summary;
+    stats:[
+      text.includes("years") ? "10+ Years Experience" : "Experienced Developer",
+      text.includes("aws") ? "AWS Cloud" : "Cloud Ready",
+      text.includes("microservices") ? "Microservices" : "Enterprise Systems",
+      "Full Stack"
+    ],
 
-  // STATS
-  const statsContainer = document.getElementById("statsContainer");
-  data.stats.forEach(stat => {
-    const div = document.createElement("div");
-    div.className = "stat-card";
-    div.textContent = stat;
+    skills:[
+      text.includes("java") && "Java",
+      text.includes("spring") && "Spring Boot",
+      text.includes("angular") && "Angular",
+      text.includes("react") && "React",
+      text.includes("aws") && "AWS"
+    ].filter(Boolean),
+
+    caseStudies:[
+      {title:"Enterprise System", client:"Client A", impact:"Worked on enterprise platform"},
+      {title:"Cloud Migration", client:"Client B", impact:"Built scalable cloud services"},
+      {title:"UI Modernization", client:"Client C", impact:"Improved frontend experience"}
+    ],
+
+    score:{
+      rating:"8/10",
+      strengths:["Strong backend","Cloud exposure","Enterprise systems"],
+      risks:["Details need validation"],
+      recommendation:"Proceed to interview"
+    }
+  };
+
+  renderData();
+  changeSlide(1);
+}
+
+function renderData(){
+
+  firstName.textContent=data.firstName;
+  lastName.textContent=data.lastName;
+  role.textContent=data.role;
+  summary.textContent=data.summary;
+
+  statsContainer.innerHTML="";
+  data.stats.forEach(s=>{
+    const div=document.createElement("div");
+    div.className="stat-card";
+    div.textContent=s;
     statsContainer.appendChild(div);
   });
 
-  // SKILLS
-  const skillsContainer = document.getElementById("skillsContainer");
-  data.skills.forEach(skill => {
-    const div = document.createElement("div");
-    div.className = "skill-pill";
-    div.textContent = skill;
+  skillsContainer.innerHTML="";
+  data.skills.forEach(s=>{
+    const div=document.createElement("div");
+    div.className="skill-pill";
+    div.textContent=s;
     skillsContainer.appendChild(div);
   });
 
-  // CASE STUDIES
-  const caseContainer = document.getElementById("caseContainer");
-  data.caseStudies.forEach(c => {
-    const div = document.createElement("div");
-    div.className = "stat-card";
-    div.innerHTML = "<b>" + c.title + "</b><br>" + c.impact;
+  caseContainer.innerHTML="";
+  data.caseStudies.forEach(c=>{
+    const div=document.createElement("div");
+    div.className="case-card";
+    div.innerHTML=`<b>${c.title}</b><br>${c.client}<br>${c.impact}`;
     caseContainer.appendChild(div);
   });
 
+  scoreContainer.textContent=data.score.rating;
+
+  strengths.innerHTML="";
+  data.score.strengths.forEach(s=>{
+    const li=document.createElement("li");
+    li.textContent=s;
+    strengths.appendChild(li);
+  });
+
+  watchouts.innerHTML="";
+  data.score.risks.forEach(r=>{
+    const li=document.createElement("li");
+    li.textContent=r;
+    watchouts.appendChild(li);
+  });
+
+  recommendation.textContent=data.score.recommendation;
+}
+
+// PDF
+function downloadPDF(){
+  html2pdf().from(document.body).save("Candidate.pdf");
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  slides=document.querySelectorAll(".slide");
 });
 
 </script>
