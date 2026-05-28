@@ -6,67 +6,63 @@
 <title>Candidate Presentation</title>
 
 <style>
-  body {
-    margin: 0;
-    font-family: Arial;
-    background: #003B46;
-    color: white;
-    overflow: hidden;
-  }
+body {
+  margin:0;
+  font-family: Arial;
+  background:#003B46;
+  color:white;
+  overflow:hidden;
+}
 
-  .slide {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: none;
-    padding: 60px;
-  }
+.slide {
+  position:absolute;
+  width:100%;
+  height:100%;
+  display:none;
+  padding:60px;
+}
 
-  .slide.active {
-    display: block;
-  }
+.slide.active { display:block; }
 
-  #nav {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-  }
+button {
+  padding:10px;
+  margin:5px;
+}
 
-  button {
-    padding: 10px;
-    margin: 5px;
-    cursor: pointer;
-  }
+#nav {
+  position:fixed;
+  bottom:20px;
+  left:50%;
+  transform:translateX(-50%);
+}
 
-  .stat-card {
-    background: rgba(255,255,255,0.1);
-    margin: 10px;
-    padding: 15px;
-    border-radius: 10px;
-    display: inline-block;
-  }
+.stat-card {
+  background:rgba(255,255,255,0.1);
+  margin:10px;
+  padding:15px;
+  border-radius:10px;
+  display:inline-block;
+}
 
-  .skill-pill {
-    background: #07575B;
-    padding: 6px 12px;
-    margin: 5px;
-    border-radius: 20px;
-    display: inline-block;
-  }
-
+.skill-pill {
+  background:#07575B;
+  padding:6px 12px;
+  margin:5px;
+  border-radius:20px;
+  display:inline-block;
+}
 </style>
 </head>
 
 <body>
 
-<!-- ✅ DATA BLOCK -->
+<!-- ✅ DATA (ONLY ONE DATA BLOCK — DO NOT DUPLICATE) -->
 <script>
 window.data = {
   firstName: "Srinika",
   lastName: "Patloori",
   role: "Senior Fullstack Developer",
-  summary: "Senior fullstack engineer with 12+ years building microservices and cloud-native applications.",
+  summary: "Senior fullstack engineer with 12+ years building microservices and cloud-native systems.",
   skills: ["Java","Spring Boot","Angular","React","AWS","Kafka"],
   stats: [
     "12+ Years Experience",
@@ -75,28 +71,33 @@ window.data = {
     "Insurance Domain"
   ],
   caseStudies: [
-    { title:"AIG Platform", impact:"Built scalable microservices for insurance systems"},
-    { title:"Amazon Systems", impact:"Designed event-driven Kafka architecture"},
-    { title:"Nationwide Portal", impact:"Modernized Angular frontends"}
+    {title:"AIG Platform", impact:"Built scalable insurance microservices"},
+    {title:"Amazon Systems", impact:"Designed Kafka event-driven systems"},
+    {title:"Nationwide Portal", impact:"Modernized Angular UI"}
   ]
 };
 </script>
 
-<!-- ✅ SLIDES -->
+<!-- ✅ SLIDE 1 -->
 <div class="slide active">
   <h1 id="name"></h1>
-  <p id="role"></p>
+  <h3 id="role"></h3>
   <p id="summary"></p>
 
+  <h3>Stats</h3>
   <div id="statsContainer"></div>
+
+  <h3>Skills</h3>
   <div id="skillsContainer"></div>
 </div>
 
+<!-- ✅ SLIDE 2 -->
 <div class="slide">
   <h2>Case Studies</h2>
   <div id="caseContainer"></div>
 </div>
 
+<!-- ✅ SLIDE 3 -->
 <div class="slide">
   <h2>End</h2>
 </div>
@@ -107,15 +108,15 @@ window.data = {
   <button onclick="changeSlide(1)">Next</button>
 </div>
 
-<!-- ✅ WORKING SCRIPT -->
+<!-- ✅ ✅ ONE CLEAN SCRIPT ONLY -->
 <script>
 
-let slides = document.querySelectorAll('.slide');
+let slides;
 let current = 0;
 
-function showSlide(index){
+function showSlide(i){
   slides.forEach(s => s.classList.remove("active"));
-  slides[index].classList.add("active");
+  slides[i].classList.add("active");
 }
 
 function changeSlide(dir){
@@ -125,14 +126,16 @@ function changeSlide(dir){
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ✅ Populate basic info
+  slides = document.querySelectorAll('.slide');
+
+  // NAME
   document.getElementById("name").textContent =
     data.firstName + " " + data.lastName;
 
   document.getElementById("role").textContent = data.role;
   document.getElementById("summary").textContent = data.summary;
 
-  // ✅ Stats
+  // STATS
   const statsContainer = document.getElementById("statsContainer");
   data.stats.forEach(stat => {
     const div = document.createElement("div");
@@ -141,7 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
     statsContainer.appendChild(div);
   });
 
-  // ✅ Skills
+  // SKILLS
   const skillsContainer = document.getElementById("skillsContainer");
   data.skills.forEach(skill => {
     const div = document.createElement("div");
@@ -150,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
     skillsContainer.appendChild(div);
   });
 
-  // ✅ Case Studies
+  // CASE STUDIES
   const caseContainer = document.getElementById("caseContainer");
   data.caseStudies.forEach(c => {
     const div = document.createElement("div");
