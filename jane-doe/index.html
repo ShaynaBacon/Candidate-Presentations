@@ -953,12 +953,10 @@ btn.style.cursor = "pointer";
 btn.onclick = toggleEditMode;
 
 document.body.appendChild(btn);
-</script>
-
 <script>
 let editMode = false;
 
-// ✅ TARGET ELEMENTS
+// ✅ All editable areas
 const editableSelectors = `
 .name, .role, .headline,
 .stat-card, .skill-pill,
@@ -967,7 +965,7 @@ const editableSelectors = `
 .closing-tagline, li
 `;
 
-// ✅ TOGGLE EDIT MODE
+// ✅ EDIT MODE
 function toggleEditMode(){
   editMode = !editMode;
 
@@ -977,21 +975,21 @@ function toggleEditMode(){
   });
 }
 
-// ✅ SAVE (ONLY save editable content, NOT entire body)
+// ✅ SAVE
 function saveEdits(){
-  const content = {};
+  const data = [];
 
-  document.querySelectorAll(editableSelectors).forEach((el, i) => {
-    content[i] = el.innerHTML;
+  document.querySelectorAll(editableSelectors).forEach(el => {
+    data.push(el.innerHTML);
   });
 
-  localStorage.setItem("presentationEdits", JSON.stringify(content));
-  alert("✅ Saved!");
+  localStorage.setItem("candidateEdits", JSON.stringify(data));
+  alert("✅ Changes saved");
 }
 
-// ✅ LOAD (restore safely without replacing body)
+// ✅ LOAD
 function loadEdits(){
-  const saved = JSON.parse(localStorage.getItem("presentationEdits"));
+  const saved = JSON.parse(localStorage.getItem("candidateEdits"));
 
   if(!saved) return;
 
@@ -1002,7 +1000,7 @@ function loadEdits(){
   });
 }
 
-// ✅ EXPORT (safe)
+// ✅ EXPORT
 function exportHTML(){
   const html = document.documentElement.outerHTML;
   const blob = new Blob([html], { type: "text/html" });
@@ -1013,25 +1011,25 @@ function exportHTML(){
   link.click();
 }
 
-// ✅ BUTTON CREATION (guaranteed render)
-function addButtons(){
+// ✅ CREATE BUTTONS
+function createButtons(){
 
-  const btnEdit = createBtn("Edit Mode", "20px", toggleEditMode);
-  const btnSave = createBtn("Save", "70px", saveEdits);
-  const btnExport = createBtn("Export File", "120px", exportHTML);
+  const edit = createBtn("Edit Mode", "20px", toggleEditMode);
+  const save = createBtn("Save", "70px", saveEdits);
+  const exportBtn = createBtn("Export File", "120px", exportHTML);
 
-  document.body.appendChild(btnEdit);
-  document.body.appendChild(btnSave);
-  document.body.appendChild(btnExport);
+  document.body.appendChild(edit);
+  document.body.appendChild(save);
+  document.body.appendChild(exportBtn);
 }
 
-function createBtn(text, top, handler){
+function createBtn(text, top, action){
   const btn = document.createElement("button");
 
   btn.innerText = text;
   btn.style.position = "fixed";
-  btn.style.top = top;
   btn.style.right = "20px";
+  btn.style.top = top;
   btn.style.zIndex = "999";
   btn.style.padding = "10px 14px";
   btn.style.background = "#C9A84C";
@@ -1039,14 +1037,14 @@ function createBtn(text, top, handler){
   btn.style.borderRadius = "20px";
   btn.style.cursor = "pointer";
 
-  btn.onclick = handler;
+  btn.onclick = action;
 
   return btn;
 }
 
-// ✅ INIT (no overwriting anymore)
+// ✅ INIT
 window.addEventListener("load", () => {
-  addButtons();
+  createButtons();
   loadEdits();
 });
 </script>
