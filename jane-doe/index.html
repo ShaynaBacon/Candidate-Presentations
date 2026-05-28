@@ -929,14 +929,23 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function exportHTML() {
-    const html = document.documentElement.outerHTML;
-    const blob = new Blob([html], { type: "text/html" });
 
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "candidate_presentation.html";
-    link.click();
-  }
+  // ✅ Hide buttons before export
+  const buttons = document.querySelectorAll("button");
+  buttons.forEach(btn => btn.style.display = "none");
+
+  // ✅ Capture clean HTML
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: "text/html" });
+
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "candidate_presentation.html";
+  link.click();
+
+  // ✅ Restore buttons after export
+  buttons.forEach(btn => btn.style.display = "block");
+}
 
   function createButton(text, top, action) {
     const btn = document.createElement("button");
