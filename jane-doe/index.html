@@ -950,10 +950,11 @@ btn.style.border = "none";
 btn.style.borderRadius = "20px";
 btn.style.cursor = "pointer";
 
-btn.onclick = toggleEditMode;
 
 document.body.appendChild(btn);
-<script>
+</script>
+
+ <script>
 let editMode = false;
 
 // ✅ All editable areas
@@ -974,7 +975,9 @@ function toggleEditMode(){
     el.style.outline = editMode ? "2px dashed #C9A84C" : "none";
   });
 }
-
+// ✅ NOW THIS COMES AFTER function exists
+ btn.onclick = () => toggleEditMode();
+  ``
 // ✅ SAVE
 function saveEdits(){
   const data = [];
