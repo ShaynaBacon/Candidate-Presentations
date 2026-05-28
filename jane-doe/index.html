@@ -1,1038 +1,166 @@
-<script>
-  window.data = {
-    firstName: "Srinika",
-    lastName: "Patloori",
-    role: "Senior Fullstack Developer",
-    experience: "12+ years",
-    industries: "Insurance, Enterprise Platforms",
-    summary: "Senior fullstack engineer with 12+ years building scalable microservices, cloud-native applications, and modern Angular/React frontends.",
-    
-    skills: ["Java", "Spring Boot", "Angular", "React", "AWS", "Kafka"],
-
-    stats: [
-      "12+ Years Experience",
-      "Enterprise Full Stack",
-      "AWS + Microservices",
-      "Insurance Domain"
-    ],
-
-    caseStudies: [
-      {
-        title: "Insurance Platform Modernization",
-        client: "TCS / AIG",
-        impact: "Built scalable microservices and Angular UI for underwriting and claims systems"
-      },
-      {
-        title: "Distributed Cloud Platform",
-        client: "Amazon",
-        impact: "Designed event-driven microservices using Kafka improving scalability"
-      },
-      {
-        title: "Enterprise Insurance Portal",
-        client: "Nationwide",
-        impact: "Modernized Angular UI and optimized backend APIs"
-      }
-    ]
-  };
-</script>
-``<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tom Raterman — Sr. Fullstack Developer | New Era Technology</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<title>Candidate Presentation</title>
+
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  :root {
-    --navy: #003B46;
-    --teal: #07575B;
-    --teal-mid: #0a6b70;
-    --white: #ffffff;
-    --off-white: #f0f5f6;
-    --gold: #C9A84C;
-    --light-teal: #66A5AD;
-    --glass: rgba(255,255,255,0.07);
-    --glass-border: rgba(255,255,255,0.12);
-  }
-
-  html, body {
-    width: 100%; height: 100%;
-    overflow: hidden;
-    background: var(--navy);
-    font-family: 'DM Sans', sans-serif;
-    color: var(--white);
-  }
-
-  /* ── SLIDESHOW CONTAINER ── */
-  #deck {
-    width: 100vw; height: 100vh;
-    position: relative;
+  body {
+    margin: 0;
+    font-family: Arial;
+    background: #003B46;
+    color: white;
     overflow: hidden;
   }
 
   .slide {
     position: absolute;
-    inset: 0;
-    width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    transform: translateX(60px);
-    transition: opacity 0.6s cubic-bezier(.4,0,.2,1), transform 0.6s cubic-bezier(.4,0,.2,1);
-    pointer-events: none;
-    padding: 60px 80px;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    display: none;
+    padding: 60px;
   }
+
   .slide.active {
-    opacity: 1; transform: translateX(0); pointer-events: all;
-  }
-  .slide.exit-left {
-    opacity: 0; transform: translateX(-60px);
+    display: block;
   }
 
-  /* ── BACKGROUND ELEMENTS ── */
-  .bg-circle {
-    position: absolute;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--teal) 0%, transparent 70%);
-    opacity: 0.18;
-    pointer-events: none;
-  }
-  .bg-grid {
-    position: absolute;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(7,87,91,0.15) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(7,87,91,0.15) 1px, transparent 1px);
-    background-size: 60px 60px;
-    pointer-events: none;
-  }
-  .bg-line {
-    position: absolute;
-    background: linear-gradient(90deg, transparent, var(--light-teal), transparent);
-    height: 1px;
-    opacity: 0.25;
-    pointer-events: none;
-  }
-
-  /* ── NAV ── */
   #nav {
     position: fixed;
-    bottom: 36px; left: 50%;
+    bottom: 20px;
+    left: 50%;
     transform: translateX(-50%);
-    display: flex; align-items: center; gap: 12px;
-    z-index: 100;
-    background: rgba(0,59,70,0.8);
-    backdrop-filter: blur(12px);
-    border: 1px solid var(--glass-border);
-    border-radius: 50px;
-    padding: 10px 20px;
   }
-  .nav-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.25);
+
+  button {
+    padding: 10px;
+    margin: 5px;
     cursor: pointer;
-    transition: all 0.3s;
-  }
-  .nav-dot.active { background: var(--gold); width: 24px; border-radius: 4px; }
-  .nav-btn {
-    background: none; border: none; color: var(--white); cursor: pointer;
-    opacity: 0.6; transition: opacity 0.2s;
-    font-size: 18px; line-height: 1;
-    padding: 2px 6px;
-  }
-  .nav-btn:hover { opacity: 1; }
-
-  #slide-counter {
-    position: fixed; top: 28px; right: 36px;
-    font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
-    color: rgba(255,255,255,0.35); font-family: 'DM Sans', sans-serif;
-    z-index: 100;
   }
 
-  /* ── LOGO MARK ── */
-  #logo-mark {
-    position: fixed; top: 24px; left: 36px;
-    z-index: 100;
-    display: flex; align-items: center; gap: 10px;
-  }
-  #logo-mark .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); }
-  #logo-mark span { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); }
-
-  /* ── SHARED COMPONENTS ── */
-  .eyebrow {
-    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
-    color: var(--gold); font-weight: 500; margin-bottom: 16px;
-    display: flex; align-items: center; gap: 10px;
-  }
-  .eyebrow::before { content: ''; display: block; width: 28px; height: 1px; background: var(--gold); }
-
-  .section-title {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(36px, 5vw, 64px);
-    line-height: 1.05;
-    font-weight: 900;
-    color: var(--white);
-    margin-bottom: 8px;
-  }
-  .section-title span { color: var(--gold); font-style: italic; }
-
-  .card {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    padding: 28px 32px;
-    backdrop-filter: blur(8px);
-  }
-
-  .tag {
-    display: inline-flex; align-items: center;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    border: 1px solid var(--glass-border);
-    color: var(--light-teal);
-    background: rgba(7,87,91,0.3);
-  }
-
-  /* ─────────────────────────────────────
-     SLIDE 1 — TITLE
-  ───────────────────────────────────── */
-  #slide-1 { background: var(--navy); justify-content: center; align-items: flex-start; }
-  #slide-1 .bg-circle.c1 { width: 700px; height: 700px; top: -200px; right: -150px; }
-  #slide-1 .bg-circle.c2 { width: 400px; height: 400px; bottom: -100px; left: -100px; opacity: 0.1; }
-
-  .title-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; width: 100%; max-width: 1100px; align-items: center; }
-
-  .title-left .name {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(52px, 6.5vw, 88px);
-    font-weight: 900;
-    line-height: 0.95;
-    color: var(--white);
-    margin-bottom: 4px;
-  }
-  .title-left .name .last { color: var(--gold); display: block; font-style: italic; }
-  .title-left .role {
-    font-size: 14px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: var(--light-teal); margin-bottom: 32px; font-weight: 500;
-    margin-top: 16px;
-  }
-  .title-left .headline {
-    font-size: 17px; line-height: 1.7; color: rgba(255,255,255,0.65);
-    max-width: 400px; font-weight: 300;
-  }
-
-  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .stat-card {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    border-radius: 14px;
-    padding: 22px 24px;
-    position: relative;
-    overflow: hidden;
+    background: rgba(255,255,255,0.1);
+    margin: 10px;
+    padding: 15px;
+    border-radius: 10px;
+    display: inline-block;
   }
-  .stat-card::before {
-    content: ''; position: absolute; top: 0; left: 0;
-    width: 100%; height: 3px;
-    background: linear-gradient(90deg, var(--teal), var(--gold));
-  }
-  .stat-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 38px; font-weight: 900;
-    color: var(--white); line-height: 1;
-    margin-bottom: 4px;
-  }
-  .stat-num span { color: var(--gold); }
-  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.45); font-weight: 500; }
 
-  .cert-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
-
-  /* ─────────────────────────────────────
-     SLIDE 2 — WHY NEW ERA
-  ───────────────────────────────────── */
-  #slide-2 { background: linear-gradient(135deg, var(--navy) 0%, #002830 100%); align-items: flex-start; justify-content: center; }
-
-  .why-layout { display: grid; grid-template-columns: 1fr 1.4fr; gap: 64px; width: 100%; max-width: 1100px; align-items: start; }
-
-  .why-left .big-quote {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(18px, 2.2vw, 26px);
-    line-height: 1.55;
-    color: rgba(255,255,255,0.85);
-    font-style: italic;
-    margin-bottom: 32px;
-  }
-  .why-left .big-quote em { color: var(--gold); font-style: normal; }
-
-  .company-badge {
-    background: linear-gradient(135deg, var(--teal), var(--navy));
-    border: 1px solid rgba(201,168,76,0.3);
-    border-radius: 16px; padding: 24px 28px;
-    margin-top: 24px;
-  }
-  .company-badge .badge-title { font-size: 11px; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gold); margin-bottom: 14px; }
-  .badge-stat { display: flex; align-items: baseline; gap: 8px; margin-bottom: 10px; }
-  .badge-stat .n { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--white); }
-  .badge-stat .d { font-size: 13px; color: rgba(255,255,255,0.55); }
-
-  .reasons-list { display: flex; flex-direction: column; gap: 16px; }
-  .reason-item {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    border-radius: 14px;
-    padding: 20px 24px;
-    display: flex; gap: 18px; align-items: flex-start;
-  }
-  .reason-icon {
-    width: 40px; height: 40px; border-radius: 10px;
-    background: linear-gradient(135deg, var(--teal), var(--teal-mid));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px; flex-shrink: 0;
-  }
-  .reason-title { font-size: 14px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
-  .reason-body { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.6; }
-
-  /* ─────────────────────────────────────
-     SLIDE 3 — EXPERIENCE
-  ───────────────────────────────────── */
-  #slide-3 { background: var(--navy); align-items: flex-start; }
-
-  .exp-layout { display: grid; grid-template-columns: 1fr 1.2fr; gap: 56px; width: 100%; max-width: 1100px; }
-
-  .timeline { display: flex; flex-direction: column; gap: 0; }
-  .tl-item {
-    display: flex; gap: 16px; padding-bottom: 28px; position: relative;
-  }
-  .tl-item:not(:last-child)::after {
-    content: ''; position: absolute;
-    left: 16px; top: 36px; bottom: 0;
-    width: 1px; background: linear-gradient(to bottom, var(--teal), transparent);
-  }
-  .tl-dot {
-    width: 33px; height: 33px; border-radius: 50%;
-    border: 2px solid var(--teal);
-    background: var(--navy);
-    display: flex; align-items: center; justify-content: center;
-    flex-shrink: 0; margin-top: 2px;
-  }
-  .tl-dot.featured { border-color: var(--gold); background: rgba(201,168,76,0.15); }
-  .tl-dot svg { width: 14px; height: 14px; }
-  .tl-content {}
-  .tl-role { font-size: 14px; font-weight: 600; color: var(--white); }
-  .tl-company { font-size: 12px; color: var(--gold); margin-bottom: 4px; font-weight: 500; }
-  .tl-dur { font-size: 11px; color: rgba(255,255,255,0.35); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px; }
-  .tl-desc { font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.6; }
-
-  .skills-panel {}
-  .skills-section { margin-bottom: 24px; }
-  .skills-section-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--gold); margin-bottom: 12px; font-weight: 600; }
-  .skill-pills { display: flex; flex-wrap: wrap; gap: 8px; }
   .skill-pill {
-    padding: 5px 14px; border-radius: 20px;
-    font-size: 12px; font-weight: 500;
-    background: rgba(7,87,91,0.35); border: 1px solid rgba(7,87,91,0.6);
-    color: rgba(255,255,255,0.75);
-    transition: all 0.2s;
-  }
-  .skill-pill:hover { background: var(--teal); color: var(--white); }
-  .skill-pill.highlight { background: rgba(201,168,76,0.15); border-color: rgba(201,168,76,0.4); color: var(--gold); }
-
-  /* ─────────────────────────────────────
-     SLIDE 4 — CASE STUDIES
-  ───────────────────────────────────── */
-  #slide-4 { background: linear-gradient(160deg, #002830 0%, var(--navy) 100%); align-items: flex-start; justify-content: flex-start; padding-top: 60px; }
-
-  .case-layout { width: 100%; max-width: 1100px; }
-  .case-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 32px; }
-
-  .cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-  .case-card {
-    background: var(--glass);
-    border: 1px solid var(--glass-border);
-    border-radius: 18px;
-    padding: 28px 24px;
-    position: relative; overflow: hidden;
-    transition: transform 0.2s, border-color 0.2s;
-  }
-  .case-card:hover { transform: translateY(-4px); border-color: rgba(201,168,76,0.4); }
-  .case-card::before {
-    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: var(--accent-color, var(--teal));
-  }
-  .case-num {
-    font-family: 'Playfair Display', serif;
-    font-size: 48px; font-weight: 900;
-    color: rgba(255,255,255,0.05);
-    position: absolute; top: 16px; right: 20px;
-    line-height: 1;
-  }
-  .case-client { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); font-weight: 600; margin-bottom: 10px; }
-  .case-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--white); margin-bottom: 12px; line-height: 1.25; }
-  .case-challenge { font-size: 12px; color: rgba(255,255,255,0.5); line-height: 1.65; margin-bottom: 18px; }
-  .case-metrics { display: flex; flex-direction: column; gap: 8px; }
-  .metric {
-    display: flex; align-items: center; gap: 10px;
-  }
-  .metric-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
-  .metric-text { font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.4; }
-  .metric-text strong { color: var(--white); }
-
-  /* ─────────────────────────────────────
-     SLIDE 5 — 30-60-90 PLAN
-  ───────────────────────────────────── */
-  #slide-5 { background: var(--navy); align-items: flex-start; }
-
-  .plan-layout { width: 100%; max-width: 1100px; }
-
-  .phases { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-top: 36px; }
-  .phase {
-    border-radius: 18px; padding: 30px 26px;
-    position: relative; overflow: hidden;
-    border: 1px solid var(--glass-border);
-  }
-  .phase-1 { background: linear-gradient(160deg, rgba(7,87,91,0.3) 0%, rgba(0,59,70,0.2) 100%); }
-  .phase-2 { background: linear-gradient(160deg, rgba(10,107,112,0.3) 0%, rgba(0,59,70,0.2) 100%); }
-  .phase-3 { background: linear-gradient(160deg, rgba(201,168,76,0.15) 0%, rgba(0,59,70,0.1) 100%); border-color: rgba(201,168,76,0.25); }
-
-  .phase-badge {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 5px 14px; border-radius: 20px;
-    font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
-    margin-bottom: 18px;
-  }
-  .phase-1 .phase-badge { background: rgba(7,87,91,0.5); color: var(--light-teal); border: 1px solid rgba(102,165,173,0.3); }
-  .phase-2 .phase-badge { background: rgba(10,107,112,0.5); color: #88c9cc; border: 1px solid rgba(136,201,204,0.3); }
-  .phase-3 .phase-badge { background: rgba(201,168,76,0.2); color: var(--gold); border: 1px solid rgba(201,168,76,0.4); }
-
-  .phase-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--white); margin-bottom: 6px; }
-  .phase-subtitle { font-size: 12px; color: rgba(255,255,255,0.4); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 20px; font-weight: 500; }
-
-  .phase-items { list-style: none; display: flex; flex-direction: column; gap: 10px; }
-  .phase-items li {
-    font-size: 13px; color: rgba(255,255,255,0.65);
-    padding-left: 18px; position: relative; line-height: 1.55;
-  }
-  .phase-items li::before {
-    content: ''; position: absolute; left: 0; top: 7px;
-    width: 5px; height: 5px; border-radius: 50%;
-    background: var(--item-color, var(--teal));
-  }
-  .phase-1 .phase-items li::before { background: var(--light-teal); }
-  .phase-2 .phase-items li::before { background: #88c9cc; }
-  .phase-3 .phase-items li::before { background: var(--gold); }
-
-  .phase-goal {
-    margin-top: 20px; padding-top: 16px;
-    border-top: 1px solid var(--glass-border);
-    font-size: 12px; color: rgba(255,255,255,0.4);
-  }
-  .phase-goal strong { color: rgba(255,255,255,0.7); display: block; margin-bottom: 3px; font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
-
-  /* ─────────────────────────────────────
-     SLIDE 6 — CLOSING
-  ───────────────────────────────────── */
-  #slide-6 { background: linear-gradient(145deg, var(--teal) 0%, var(--navy) 60%); justify-content: center; align-items: center; text-align: center; }
-  #slide-6 .bg-circle.c1 { width: 800px; height: 800px; top: 50%; left: 50%; transform: translate(-50%,-50%); opacity: 0.12; }
-
-  .closing-content { max-width: 720px; position: relative; z-index: 2; }
-  .closing-content .big-name {
-    font-family: 'Playfair Display', serif;
-    font-size: clamp(48px, 7vw, 96px);
-    font-weight: 900; line-height: 0.92;
-    color: var(--white); margin-bottom: 8px;
-  }
-  .closing-content .big-name .italic { font-style: italic; color: var(--gold); }
-  .closing-tagline {
-    font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.7;
-    margin: 28px 0 40px; font-weight: 300;
-  }
-  .closing-tagline strong { color: var(--white); font-weight: 600; }
-
-  .contact-row { display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; margin-bottom: 40px; }
-  .contact-item {
-    display: flex; align-items: center; gap: 8px;
-    font-size: 13px; color: rgba(255,255,255,0.6);
-    background: var(--glass); border: 1px solid var(--glass-border);
-    padding: 10px 20px; border-radius: 30px;
-  }
-  .contact-item svg { opacity: 0.7; }
-
-  .cta-btn {
-    display: inline-flex; align-items: center; gap: 10px;
-    background: var(--gold); color: var(--navy);
-    font-weight: 700; font-size: 14px; letter-spacing: 0.06em; text-transform: uppercase;
-    padding: 16px 36px; border-radius: 50px; border: none; cursor: pointer;
-    text-decoration: none;
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 8px 32px rgba(201,168,76,0.3);
-  }
-  .cta-btn:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(201,168,76,0.45); }
-
-  .signature-line {
-    margin-top: 40px; padding-top: 32px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-    font-size: 12px; color: rgba(255,255,255,0.25);
-    letter-spacing: 0.1em; text-transform: uppercase;
+    background: #07575B;
+    padding: 6px 12px;
+    margin: 5px;
+    border-radius: 20px;
+    display: inline-block;
   }
 
-  /* ── KEY ANIMATION ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-  .slide.active > * { animation: fadeUp 0.5s ease forwards; }
-  .slide.active > *:nth-child(2) { animation-delay: 0.1s; opacity: 0; }
-  .slide.active > *:nth-child(3) { animation-delay: 0.18s; opacity: 0; }
 </style>
 </head>
+
 <body>
 
-<div id="logo-mark">
-  <div class="dot"></div>
-  <span>New Era Technology</span>
+<!-- ✅ DATA BLOCK -->
+<script>
+window.data = {
+  firstName: "Srinika",
+  lastName: "Patloori",
+  role: "Senior Fullstack Developer",
+  summary: "Senior fullstack engineer with 12+ years building microservices and cloud-native applications.",
+  skills: ["Java","Spring Boot","Angular","React","AWS","Kafka"],
+  stats: [
+    "12+ Years Experience",
+    "Enterprise Full Stack",
+    "AWS + Microservices",
+    "Insurance Domain"
+  ],
+  caseStudies: [
+    { title:"AIG Platform", impact:"Built scalable microservices for insurance systems"},
+    { title:"Amazon Systems", impact:"Designed event-driven Kafka architecture"},
+    { title:"Nationwide Portal", impact:"Modernized Angular frontends"}
+  ]
+};
+</script>
+
+<!-- ✅ SLIDES -->
+<div class="slide active">
+  <h1 id="name"></h1>
+  <p id="role"></p>
+  <p id="summary"></p>
+
+  <div id="statsContainer"></div>
+  <div id="skillsContainer"></div>
 </div>
-<div id="slide-counter">01 / 06</div>
 
-<div id="deck">
+<div class="slide">
+  <h2>Case Studies</h2>
+  <div id="caseContainer"></div>
+</div>
 
-  <!-- ══ SLIDE 1 — TITLE ══ -->
-  <div class="slide active" id="slide-1">
-    <div class="bg-circle c1"></div>
-    <div class="bg-circle c2"></div>
-    <div class="bg-grid"></div>
+<div class="slide">
+  <h2>End</h2>
+</div>
 
-    <div class="title-layout">
-      <div class="title-left">
-        <div class="eyebrow">Candidate Presentation</div>
-        <div class="name">
-          Tom
-          <span class="last">Raterman</span>
-        </div>
-        <div class="role">Sr. Fullstack Developer · New Era Technology</div>
-        <p class="headline">
-          15+ years crafting enterprise-grade web applications — from .NET APIs to modern Angular & React frontends — with a deep specialization in Azure cloud and regulated industries.
-        </p>
-        <div class="cert-row" style="margin-top:28px;">
-          <span class="tag">B.S. Business Informatics</span>
-          <span class="tag">Northern Kentucky University</span>
-        </div>
-      </div>
+<!-- ✅ NAV -->
+<div id="nav">
+  <button onclick="changeSlide(-1)">Prev</button>
+  <button onclick="changeSlide(1)">Next</button>
+</div>
 
-      <div class="stats-grid" id="statsContainer"></div>
-        <div class="stat-card" style="grid-column: span 2; --tl: var(--gold);">
-          <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.12em; color:var(--gold); margin-bottom:12px; font-weight:600;">Core Stack</div>
-          <div style="display:flex; flex-wrap:wrap; gap:7px;">
-       <div id="skillsContainer"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SLIDE 2 — WHY NEW ERA ══ -->
-  <div class="slide" id="slide-2">
-    <div class="bg-grid"></div>
-    <div class="why-layout">
-      <div class="why-left">
-        <div class="eyebrow">My Motivation</div>
-        <h2 class="section-title">Why <span>New Era</span> Technology</h2>
-
-        <p class="big-quote" style="margin-top:20px;">
-          "I've already <em>delivered results</em> for New Era clients twice — this isn't a leap of faith, it's a logical next step."
-        </p>
-
-        <div class="company-badge">
-          <div class="badge-title">New Era @ Liberty Mutual — Proven Track Record</div>
-          <div class="badge-stat"><span class="n">#1</span><span class="d">Rated IT Supplier — 2016 & 2017</span></div>
-          <div class="badge-stat"><span class="n">93%</span><span class="d">Record Net Promotor Score — 2017</span></div>
-          <div class="badge-stat"><span class="n">25 yrs</span><span class="d">Trusted Partner relationship</span></div>
-          <div class="badge-stat"><span class="n">🏆</span><span class="d">Distinguished Service Award — 2017</span></div>
-        </div>
-      </div>
-
-      <div class="reasons-list">
-        <div class="reason-item">
-          <div class="reason-icon">🔁</div>
-          <div>
-            <div class="reason-title">Already Part of the Family</div>
-            <div class="reason-body">I delivered for New Era at TQL (modernized a legacy WinForms app to React + ASP.NET Core) and Simon Property Group (Azure AD B2C unified auth). I know how New Era operates and I thrive in it.</div>
-          </div>
-        </div>
-        <div class="reason-item">
-          <div class="reason-icon">🎯</div>
-          <div>
-            <div class="reason-title">Mission Alignment</div>
-            <div class="reason-body">New Era's model — collaborative consulting backed by deep technical expertise — mirrors exactly how I work. I bring both the architecture skills and the communication ability to be a true partner to clients.</div>
-          </div>
-        </div>
-        <div class="reason-item">
-          <div class="reason-icon">📈</div>
-          <div>
-            <div class="reason-title">Growth & Impact at Scale</div>
-            <div class="reason-body">New Era's breadth across Healthcare, Financial Services, and enterprise technology means I can continue building depth while broadening my impact across industries I'm already credentialed in.</div>
-          </div>
-        </div>
-        <div class="reason-item">
-          <div class="reason-icon">🧑‍💻</div>
-          <div>
-            <div class="reason-title">Mentorship & Leadership Culture</div>
-            <div class="reason-body">As a passionate mentor to junior developers, I'm drawn to New Era's collaborative team culture — where technical leadership and people development go hand in hand.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SLIDE 3 — EXPERIENCE ══ -->
-  <div class="slide" id="slide-3">
-    <div class="bg-grid"></div>
-    <div class="exp-layout">
-      <div>
-        <div class="eyebrow">Career Timeline</div>
-        <h2 class="section-title" style="font-size:clamp(28px,3.5vw,48px);">15 Years of<br><span>Enterprise Delivery</span></h2>
-        <div class="timeline" style="margin-top:28px;">
-
-          <div class="tl-item">
-            <div class="tl-dot featured">
-              <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4" fill="#C9A84C"/></svg>
-            </div>
-            <div class="tl-content">
-              <div class="tl-role">Senior Developer</div>
-              <div class="tl-company">New Era Technology | TQL</div>
-              <div class="tl-dur">5 months</div>
-              <div class="tl-desc">Modernized legacy WinForms → React + ASP.NET Core Web API with Entity Framework.</div>
-            </div>
-          </div>
-
-          <div class="tl-item">
-            <div class="tl-dot featured">
-              <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4" fill="#C9A84C"/></svg>
-            </div>
-            <div class="tl-content">
-              <div class="tl-role">Senior Developer</div>
-              <div class="tl-company">New Era Technology | Simon Property Group</div>
-              <div class="tl-dur">10 months</div>
-              <div class="tl-desc">Unified auth via Azure AD B2C; custom Identity Experience Framework policies; MS Graph API integration.</div>
-            </div>
-          </div>
-
-          <div class="tl-item">
-            <div class="tl-dot">
-              <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4" fill="#66A5AD"/></svg>
-            </div>
-            <div class="tl-content">
-              <div class="tl-role">Lead Developer</div>
-              <div class="tl-company">Fusion Alliance | TQL, Kinetic Advantage, Fifth Third Bank</div>
-              <div class="tl-dur">~2.5 years</div>
-              <div class="tl-desc">CQRS REST APIs, Angular NgRx, Azure B2C auth, AngularJS → Angular 12 migration, security focus.</div>
-            </div>
-          </div>
-
-          <div class="tl-item">
-            <div class="tl-dot">
-              <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4" fill="#66A5AD"/></svg>
-            </div>
-            <div class="tl-content">
-              <div class="tl-role">Senior/Lead Developer</div>
-              <div class="tl-company">Orion Portfolio Solutions</div>
-              <div class="tl-dur">1 year 3 months</div>
-              <div class="tl-desc">Architected ASP.NET Core REST API for compliant financial data access; integrated SQL Server & SSIS.</div>
-            </div>
-          </div>
-
-          <div class="tl-item">
-            <div class="tl-dot">
-              <svg viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="4" fill="#66A5AD"/></svg>
-            </div>
-            <div class="tl-content">
-              <div class="tl-role">Front-End Developer → Founder</div>
-              <div class="tl-company">Robert Half Technology / Webforge Technologies / GlueWorks</div>
-              <div class="tl-dur">8+ years</div>
-              <div class="tl-desc">Full-spectrum: specialty pharmacy API, healthcare EMR integration, responsive UIs, Angel/VC-funded startup, ASP.NET MVC, MongoDB.</div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <div class="skills-panel">
-        <div class="eyebrow" style="margin-bottom:24px;">Technical Skillset</div>
-
-        <div class="skills-section">
-          <div class="skills-section-title">Languages</div>
-          <div class="skill-pills">
-            <span class="skill-pill highlight">C#</span>
-            <span class="skill-pill highlight">TypeScript</span>
-            <span class="skill-pill highlight">JavaScript</span>
-            <span class="skill-pill">SQL</span>
-            <span class="skill-pill">HTML/CSS</span>
-            <span class="skill-pill">PowerShell</span>
-            <span class="skill-pill">Bash</span>
-          </div>
-        </div>
-
-        <div class="skills-section">
-          <div class="skills-section-title">Frameworks & Libraries</div>
-          <div class="skill-pills">
-            <span class="skill-pill highlight">.NET Core</span>
-            <span class="skill-pill highlight">Angular</span>
-            <span class="skill-pill highlight">React</span>
-            <span class="skill-pill">.NET Framework</span>
-            <span class="skill-pill">Entity Framework</span>
-            <span class="skill-pill">NgRx</span>
-            <span class="skill-pill">Angular Material</span>
-          </div>
-        </div>
-
-        <div class="skills-section">
-          <div class="skills-section-title">Cloud & DevOps</div>
-          <div class="skill-pills">
-            <span class="skill-pill highlight">Microsoft Azure</span>
-            <span class="skill-pill highlight">Azure AD B2C</span>
-            <span class="skill-pill highlight">Azure DevOps</span>
-            <span class="skill-pill">Azure API Management</span>
-            <span class="skill-pill">Azure Front Door</span>
-            <span class="skill-pill">OAuth 2.0</span>
-          </div>
-        </div>
-
-        <div class="skills-section">
-          <div class="skills-section-title">Data & APIs</div>
-          <div class="skill-pills">
-            <span class="skill-pill">SQL Server</span>
-            <span class="skill-pill">MongoDB</span>
-            <span class="skill-pill">SSIS</span>
-            <span class="skill-pill highlight">REST</span>
-            <span class="skill-pill">GraphQL</span>
-            <span class="skill-pill">SOAP</span>
-            <span class="skill-pill">CQRS</span>
-          </div>
-        </div>
-
-        <div class="skills-section">
-          <div class="skills-section-title">Tools & Methodology</div>
-          <div class="skill-pills">
-            <span class="skill-pill">Git</span>
-            <span class="skill-pill">Visual Studio</span>
-            <span class="skill-pill">Postman</span>
-            <span class="skill-pill">Fiddler</span>
-            <span class="skill-pill">Agile/Scrum</span>
-            <span class="skill-pill">CI/CD</span>
-            <span class="skill-pill">TFS</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SLIDE 4 — CASE STUDIES ══ -->
-  <div class="slide" id="slide-4">
-    <div class="bg-grid"></div>
-    <div class="case-layout">
-      <div class="case-header">
-        <div>
-          <div class="eyebrow">Proof of Impact</div>
-          <h2 class="section-title">Three <span>Case Studies</span></h2>
-        </div>
-        <span class="tag">Selected Engagements</span>
-      </div>
-
-      <div class="cases-grid">
-
-        <div class="case-card" style="--accent-color: var(--gold);">
-          <div class="case-num">01</div>
-          <div class="case-client">New Era Technology · TQL</div>
-          <div class="case-title">Legacy App Modernization</div>
-          <div class="case-challenge">Total Quality Logistics needed to sunset a brittle WinForms application and replace it with a modern, scalable web solution — without disrupting business operations.</div>
-          <div class="case-metrics">
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>New React frontend</strong> with extended base component library</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>ASP.NET Core Web API</strong> with Entity Framework ORM</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>Standards & best practices</strong> guidance delivered to dev team</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>Zero business disruption</strong> during full stack replacement</div></div>
-          </div>
-        </div>
-
-        <div class="case-card" style="--accent-color: var(--light-teal);">
-          <div class="case-num">02</div>
-          <div class="case-client">New Era Technology · Simon Property Group</div>
-          <div class="case-title">Enterprise Identity Unification</div>
-          <div class="case-challenge">Simon Property Group had fragmented authentication systems across legacy and modern platforms, creating security risks and a poor user experience across their global portfolio.</div>
-          <div class="case-metrics">
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>Azure AD B2C</strong> deployed as unified identity platform</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>Custom Identity Experience Framework</strong> policies for legacy systems</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>ASP.NET Core API</strong> bridging Microsoft Graph + existing systems</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>Single auth surface</strong> across all platforms in 10 months</div></div>
-          </div>
-        </div>
-
-        <div class="case-card" style="--accent-color: #88c9cc;">
-          <div class="case-num">03</div>
-          <div class="case-client">Fusion Alliance · Fifth Third Bank</div>
-          <div class="case-title">Secure Online Banking Upgrade</div>
-          <div class="case-challenge">Fifth Third Bank's online banking platform was built on AngularJS — a deprecated framework with known security vulnerabilities — requiring a full migration to Angular 12 without customer disruption.</div>
-          <div class="case-metrics">
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>AngularJS → Angular 12</strong> full platform migration</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>Security-first approach</strong> on every component conversion</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>Comprehensive unit tests</strong> implemented platform-wide</div></div>
-            <div class="metric"><div class="metric-dot"></div><div class="metric-text"><strong>Zero security incidents</strong> post-migration</div></div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SLIDE 5 — 30-60-90 PLAN ══ -->
-  <div class="slide" id="slide-5">
-    <div class="bg-grid"></div>
-    <div class="plan-layout">
-      <div class="eyebrow">Strategic Onboarding</div>
-      <h2 class="section-title">My 30 · 60 · <span>90 Day Plan</span></h2>
-
-      <div class="phases">
-
-        <div class="phase phase-1">
-          <div class="phase-badge">Days 1–30</div>
-          <div class="phase-title">Listen & Learn</div>
-          <div class="phase-subtitle">Foundation Setting</div>
-          <ul class="phase-items">
-            <li>Shadow senior teammates and absorb New Era's delivery methodology and client communication style</li>
-            <li>Deep-dive into current project codebases, architecture decisions, and technical debt inventory</li>
-            <li>Meet with client stakeholders to understand pain points and expectations</li>
-            <li>Set up local dev environment and complete all onboarding tooling</li>
-            <li>Identify quick wins to deliver value early without overstepping</li>
-          </ul>
-          <div class="phase-goal"><strong>30-Day Goal</strong>Fully operational, relationships established, first PR merged.</div>
-        </div>
-
-        <div class="phase phase-2">
-          <div class="phase-badge">Days 31–60</div>
-          <div class="phase-title">Build & Contribute</div>
-          <div class="phase-subtitle">Active Delivery</div>
-          <ul class="phase-items">
-            <li>Own complete feature stories from design to deployment with full test coverage</li>
-            <li>Contribute to code reviews and raise the bar for team coding standards</li>
-            <li>Propose and implement at least one process or architectural improvement</li>
-            <li>Begin mentoring junior developers through pair programming sessions</li>
-            <li>Strengthen client relationships through proactive status communication</li>
-          </ul>
-          <div class="phase-goal"><strong>60-Day Goal</strong>Delivering independently, trusted by team and client.</div>
-        </div>
-
-        <div class="phase phase-3">
-          <div class="phase-badge">Days 61–90</div>
-          <div class="phase-title">Lead & Elevate</div>
-          <div class="phase-subtitle">Strategic Impact</div>
-          <ul class="phase-items">
-            <li>Take ownership of a full workstream or feature initiative end-to-end</li>
-            <li>Present technical recommendations to client leadership with data-driven rationale</li>
-            <li>Develop and document reusable patterns benefiting the broader New Era dev community</li>
-            <li>Identify new service opportunities or technical needs for client expansion</li>
-            <li>Define personal 6-month goals aligned with New Era's growth objectives</li>
-          </ul>
-          <div class="phase-goal"><strong>90-Day Goal</strong>Operating as a senior voice — technically and strategically.</div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <!-- ══ SLIDE 6 — CLOSING ══ -->
-  <div class="slide" id="slide-6">
-    <div class="bg-circle c1"></div>
-    <div class="bg-grid" style="opacity:0.06;"></div>
-
-    <div class="closing-content">
-      <div class="eyebrow" style="justify-content:center;">Thank You</div>
-      <div class="big-name">
-        Let's Build<br>
-        <span class="italic">Something Great</span>
-      </div>
-
-      <p class="closing-tagline">
-        I bring <strong>15+ years of enterprise fullstack experience</strong>, a proven track record <strong>delivering for New Era clients</strong>, and the mindset of a senior developer who codes as well as he communicates. I'm ready to contribute from day one.
-      </p>
-
-      <div class="contact-row">
-        <div class="contact-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
-          linkedin.com/in/tomraterman
-        </div>
-        <div class="contact-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-          Sr. Fullstack Developer
-        </div>
-        <div class="contact-item">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          Available Immediately
-        </div>
-      </div>
-
-      <a href="https://www.linkedin.com/in/tomraterman/" target="_blank" class="cta-btn">
-        Connect on LinkedIn
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </a>
-
-      <div class="signature-line">
-        Prepared for New Era Technology · Senior Fullstack Developer Application · 2025
-      </div>
-    </div>
-  </div>
-
-</div><!-- /deck -->
-
-<!-- ── NAVIGATION ── -->
-<nav id="nav">
-  <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">&#8592;</button>
-  <div class="nav-dot active" onclick="goTo(0)"></div>
-  <div class="nav-dot" onclick="goTo(1)"></div>
-  <div class="nav-dot" onclick="goTo(2)"></div>
-  <div class="nav-dot" onclick="goTo(3)"></div>
-  <div class="nav-dot" onclick="goTo(4)"></div>
-  <div class="nav-dot" onclick="goTo(5)"></div>
-  <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">&#8594;</button>
-</nav>
-
-<script>
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.nav-dot');
-  const counter = document.getElementById('slide-counter');
-  let current = 0;
-
-  function goTo(idx) {
-    if (idx === current) return;
-    const dir = idx > current ? 1 : -1;
-    slides[current].classList.remove('active');
-    slides[current].classList.add(dir > 0 ? 'exit-left' : '');
-    setTimeout(() => slides[current < slides.length ? current : 0].classList.remove('exit-left'), 600);
-    dots[current].classList.remove('active');
-    current = idx;
-    slides[current].classList.add('active');
-    dots[current].classList.add('active');
-    counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
-  }
-
-  function changeSlide(dir) {
-    const next = (current + dir + slides.length) % slides.length;
-    goTo(next);
-  }
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
-  });
-
-  // Touch/swipe support
-  let startX = 0;
-  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
-  document.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
-  });
+<!-- ✅ WORKING SCRIPT -->
 <script>
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
-  });
-
-  // Touch/swipe support
-  let startX = 0;
-  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
-  document.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
-  });
-
-  // ✅ ✅ ADD THIS BLOCK WRAPPER
-  document.addEventListener("DOMContentLoaded", () => {
-
-<script>
-
-  // 1️⃣ NAVIGATION (leave this EXACTLY as it was)
-<script>
-<script>
-let slides, dots, counter;
+let slides = document.querySelectorAll('.slide');
 let current = 0;
+
+function showSlide(index){
+  slides.forEach(s => s.classList.remove("active"));
+  slides[index].classList.add("active");
+}
+
+function changeSlide(dir){
+  current = (current + dir + slides.length) % slides.length;
+  showSlide(current);
+}
 
 document.addEventListener("DOMContentLoaded", () => {
 
-  // ✅ Initialize slides
-  slides = document.querySelectorAll('.slide');
-  dots = document.querySelectorAll('.nav-dot');
-  counter = document.getElementById('slide-counter');
+  // ✅ Populate basic info
+  document.getElementById("name").textContent =
+    data.firstName + " " + data.lastName;
+
+  document.getElementById("role").textContent = data.role;
+  document.getElementById("summary").textContent = data.summary;
 
   // ✅ Stats
   const statsContainer = document.getElementById("statsContainer");
-  if (statsContainer && window.data) {
-    data.stats.forEach(stat => {
-      const div = document.createElement("div");
-      div.className = "stat-card";
-
-      const parts = stat.split(" ");
-
-      div.innerHTML = `
-        <div class="stat-num">${parts[0]}</div>
-        <div class="stat-label">${parts.slice(1).join(" ")}</div>
-      `;
-
-      statsContainer.appendChild(div);
-    });
-  }
+  data.stats.forEach(stat => {
+    const div = document.createElement("div");
+    div.className = "stat-card";
+    div.textContent = stat;
+    statsContainer.appendChild(div);
+  });
 
   // ✅ Skills
   const skillsContainer = document.getElementById("skillsContainer");
-  if (skillsContainer && window.data) {
-    data.skills.forEach(skill => {
-      const span = document.createElement("span");
-      span.className = "skill-pill highlight";
-      span.textContent = skill;
-      skillsContainer.appendChild(span);
-    });
-  }
+  data.skills.forEach(skill => {
+    const div = document.createElement("div");
+    div.className = "skill-pill";
+    div.textContent = skill;
+    skillsContainer.appendChild(div);
+  });
+
+  // ✅ Case Studies
+  const caseContainer = document.getElementById("caseContainer");
+  data.caseStudies.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "stat-card";
+    div.innerHTML = "<b>" + c.title + "</b><br>" + c.impact;
+    caseContainer.appendChild(div);
+  });
 
 });
 
-function goTo(idx) {
-  if (idx === current) return;
-
-  slides[current].classList.remove('active');
-  dots[current].classList.remove('active');
-
-  current = idx;
-
-  slides[current].classList.add('active');
-  dots[current].classList.add('active');
-
-  counter.textContent =
-    String(current + 1).padStart(2, '0') + ' / ' +
-    String(slides.length).padStart(2, '0');
-}
-
-function changeSlide(dir) {
-  const next = (current + dir + slides.length) % slides.length;
-  goTo(next);
-}
-
-document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
-  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
-});
-
-let startX = 0;
-document.addEventListener('touchstart', e => {
-  startX = e.touches[0].clientX;
-});
-document.addEventListener('touchend', e => {
-  const dx = e.changedTouches[0].clientX - startX;
-  if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
-});
 </script>
 
 </body>
