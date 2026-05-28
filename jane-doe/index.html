@@ -979,6 +979,7 @@ function toggleEditMode() {
 // ✅ SAVE
 function saveEdits() {
   const data = [];
+
   document.querySelectorAll(editableSelectors).forEach(el => {
     data.push(el.innerHTML);
   });
@@ -1010,7 +1011,7 @@ function exportHTML() {
   link.click();
 }
 
-// ✅ CREATE BUTTON HELPER
+// ✅ BUTTON CREATOR
 function createBtn(text, top, action) {
   const btn = document.createElement("button");
 
@@ -1021,7 +1022,32 @@ function createBtn(text, top, action) {
   btn.style.zIndex = "999";
   btn.style.padding = "10px 14px";
   btn.style.background = "#C9A84C";
+  btn.style.border = "none";
+  btn.style.borderRadius = "20px";
+  btn.style.cursor = "pointer";
 
+  btn.onclick = action;
 
+  return btn;
+}
+
+// ✅ CREATE BUTTONS
+function createButtons() {
+  const editBtn = createBtn("Edit Mode", "20px", toggleEditMode);
+  const saveBtn = createBtn("Save", "70px", saveEdits);
+  const exportBtn = createBtn("Export File", "120px", exportHTML);
+
+  document.body.appendChild(editBtn);
+  document.body.appendChild(saveBtn);
+  document.body.appendChild(exportBtn);
+}
+
+// ✅ INIT
+window.addEventListener("load", () => {
+  createButtons();
+  loadEdits();
+});
+</script>
+``
 </body>
 </html>
