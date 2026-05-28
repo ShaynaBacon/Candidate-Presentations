@@ -935,30 +935,48 @@
     const dx = e.changedTouches[0].clientX - startX;
     if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
   });
-document.addEventListener("DOMContentLoaded", () => {
-  const statsContainer = document.getElementById("statsContainer");
+<script>
 
-  if (statsContainer) {
-    data.stats.forEach(stat => {
-      const div = document.createElement("div");
-      div.className = "stat-card";
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
+  });
 
-      const parts = stat.split(" ");
+  // Touch/swipe support
+  let startX = 0;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
+  });
 
-      div.innerHTML = `
-        <div class="stat-num">
-          ${parts[0]}<span>${parts[1] ? '+' : ''}</span>
-        </div>
-        <div class="stat-label">
-          ${parts.slice(1).join(" ")}
-        </div>
-      `;
+  // ✅ ✅ ADD THIS BLOCK WRAPPER
+  document.addEventListener("DOMContentLoaded", () => {
 
-      statsContainer.appendChild(div);
-    });
-  }
-});
-}
+    const statsContainer = document.getElementById("statsContainer");
+
+    if (statsContainer) {
+      data.stats.forEach(stat => {
+        const div = document.createElement("div");
+        div.className = "stat-card";
+
+        const parts = stat.split(" ");
+
+        div.innerHTML = `
+          <div class="stat-num">
+            ${parts[0]}<span>${parts[1] ? '+' : ''}</span>
+          </div>
+          <div class="stat-label">
+            ${parts.slice(1).join(" ")}
+          </div>
+        `;
+
+        statsContainer.appendChild(div);
+      });
+    }
+
+  });
+
 </script>
 </body>
 </html>
