@@ -958,7 +958,7 @@ document.body.appendChild(btn);
 <script>
 let editMode = false;
 
-// ✅ TARGET TEXT ELEMENTS
+// ✅ TARGET ELEMENTS
 const editableSelectors = `
 .name, .role, .headline,
 .stat-card, .skill-pill,
@@ -967,7 +967,7 @@ const editableSelectors = `
 .closing-tagline, li
 `;
 
-// ✅ EDIT MODE TOGGLE
+// ✅ TOGGLE EDIT MODE
 function toggleEditMode(){
   editMode = !editMode;
 
@@ -977,54 +977,58 @@ function toggleEditMode(){
   });
 }
 
-// ✅ SAVE FUNCTION
+// ✅ SAVE (ONLY save editable content, NOT entire body)
 function saveEdits(){
-  localStorage.setItem("savedPresentation", document.body.innerHTML);
+  const content = {};
+
+  document.querySelectorAll(editableSelectors).forEach((el, i) => {
+    content[i] = el.innerHTML;
+  });
+
+  localStorage.setItem("presentationEdits", JSON.stringify(content));
   alert("✅ Saved!");
 }
 
-// ✅ LOAD FUNCTION
+// ✅ LOAD (restore safely without replacing body)
 function loadEdits(){
-  const saved = localStorage.getItem("savedPresentation");
-  if(saved){
-    document.body.innerHTML = saved;
-  }
+  const saved = JSON.parse(localStorage.getItem("presentationEdits"));
+
+  if(!saved) return;
+
+  document.querySelectorAll(editableSelectors).forEach((el, i) => {
+    if(saved[i]){
+      el.innerHTML = saved[i];
+    }
+  });
 }
 
-// ✅ EXPORT FUNCTION
+// ✅ EXPORT (safe)
 function exportHTML(){
-  const blob = new Blob([document.documentElement.outerHTML], { type: "text/html" });
+  const html = document.documentElement.outerHTML;
+  const blob = new Blob([html], { type: "text/html" });
+
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
   link.download = "candidate_presentation.html";
   link.click();
 }
 
-// ✅ CREATE BUTTONS (SEPARATE — NO BREAKING)
+// ✅ BUTTON CREATION (guaranteed render)
 function addButtons(){
 
-  const btnEdit = document.createElement("button");
-  btnEdit.innerText = "Edit Mode";
-  styleBtn(btnEdit, "20px");
-  btnEdit.onclick = toggleEditMode;
-
-  const btnSave = document.createElement("button");
-  btnSave.innerText = "Save";
-  styleBtn(btnSave, "70px");
-  btnSave.onclick = saveEdits;
-
-  const btnExport = document.createElement("button");
-  btnExport.innerText = "Export File";
-  styleBtn(btnExport, "120px");
-  btnExport.onclick = exportHTML;
+  const btnEdit = createBtn("Edit Mode", "20px", toggleEditMode);
+  const btnSave = createBtn("Save", "70px", saveEdits);
+  const btnExport = createBtn("Export File", "120px", exportHTML);
 
   document.body.appendChild(btnEdit);
   document.body.appendChild(btnSave);
   document.body.appendChild(btnExport);
 }
 
-// ✅ STYLE FOR BUTTONS
-function styleBtn(btn, top){
+function createBtn(text, top, handler){
+  const btn = document.createElement("button");
+
+  btn.innerText = text;
   btn.style.position = "fixed";
   btn.style.top = top;
   btn.style.right = "20px";
@@ -1034,13 +1038,18 @@ function styleBtn(btn, top){
   btn.style.border = "none";
   btn.style.borderRadius = "20px";
   btn.style.cursor = "pointer";
+
+  btn.onclick = handler;
+
+  return btn;
 }
 
-// ✅ RUN ON LOAD (IMPORTANT)
-window.addEventListener("DOMContentLoaded", () => {
-  loadEdits();
+// ✅ INIT (no overwriting anymore)
+window.addEventListener("load", () => {
   addButtons();
+  loadEdits();
 });
 </script>
+
 </body>
 </html>
