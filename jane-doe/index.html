@@ -884,170 +884,90 @@
   <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">&#8594;</button>
 </nav>
 
-<script>
-  const slides = document.querySelectorAll('.slide');
-  const dots = document.querySelectorAll('.nav-dot');
-  const counter = document.getElementById('slide-counter');
-  let current = 0;
-
-  function goTo(idx) {
-    if (idx === current) return;
-    const dir = idx > current ? 1 : -1;
-    slides[current].classList.remove('active');
-    slides[current].classList.add(dir > 0 ? 'exit-left' : '');
-    setTimeout(() => slides[current < slides.length ? current : 0].classList.remove('exit-left'), 600);
-    dots[current].classList.remove('active');
-    current = idx;
-    slides[current].classList.add('active');
-    dots[current].classList.add('active');
-    counter.textContent = String(current + 1).padStart(2, '0') + ' / ' + String(slides.length).padStart(2, '0');
-  }
-
-  function changeSlide(dir) {
-    const next = (current + dir + slides.length) % slides.length;
-    goTo(next);
-  }
-
-  document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') changeSlide(1);
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
-  });
-
-  // Touch/swipe support
-  let startX = 0;
-  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
-  document.addEventListener('touchend', e => {
-    const dx = e.changedTouches[0].clientX - startX;
-    if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
-  });
-</script><script>
-let editMode = false;
-
-function toggleEditMode(){
-  editMode = !editMode;
-
-  // ✅ Automatically target ALL text content areas
-  const elements = document.querySelectorAll(
-    '.name, .role, .headline, .stat-card, .skill-pill, .tl-role, .tl-company, .tl-dur, .tl-desc, .case-title, .case-challenge, .case-client, .closing-tagline, li'
-  );
-
-  elements.forEach(el => {
-    el.contentEditable = editMode;
-    el.style.outline = editMode ? "2px dashed #C9A84C" : "none";
-  });
-}
-
-// ✅ Add button dynamically (no manual placement needed)
-const btn = document.createElement("button");
-btn.innerText = "Toggle Edit Mode";
-btn.style.position = "fixed";
-btn.style.top = "20px";
-btn.style.right = "20px";
-btn.style.zIndex = "999";
-btn.style.padding = "10px 14px";
-btn.style.background = "#C9A84C";
-btn.style.border = "none";
-btn.style.borderRadius = "20px";
-btn.style.cursor = "pointer";
-
-
-document.body.appendChild(btn);
 </script>
 
 <script>
-let editMode = false;
+window.addEventListener("DOMContentLoaded", () => {
 
-// ✅ ALL editable areas
-const editableSelectors = `
-.name, .role, .headline,
-.stat-card, .skill-pill,
-.tl-role, .tl-company, .tl-dur, .tl-desc,
-.case-title, .case-client, .case-challenge,
-.closing-tagline, li
-`;
+  let editMode = false;
 
-// ✅ EDIT MODE
-function toggleEditMode() {
-  editMode = !editMode;
+  const editableSelectors = `
+    .name, .role, .headline,
+    .stat-card, .skill-pill,
+    .tl-role, .tl-company, .tl-dur, .tl-desc,
+    .case-title, .case-client, .case-challenge,
+    .closing-tagline, li
+  `;
 
-  document.querySelectorAll(editableSelectors).forEach(el => {
-    el.contentEditable = editMode;
-    el.style.outline = editMode ? "2px dashed #C9A84C" : "none";
-  });
-}
+  function toggleEditMode() {
+    editMode = !editMode;
 
-// ✅ SAVE
-function saveEdits() {
-  const data = [];
+    document.querySelectorAll(editableSelectors).forEach(el => {
+      el.contentEditable = editMode;
+      el.style.outline = editMode ? "2px dashed #C9A84C" : "none";
+    });
+  }
 
-  document.querySelectorAll(editableSelectors).forEach(el => {
-    data.push(el.innerHTML);
-  });
+  function saveEdits() {
+    const data = [];
 
-  localStorage.setItem("candidateEdits", JSON.stringify(data));
-  alert("✅ Changes saved");
-}
+    document.querySelectorAll(editableSelectors).forEach(el => {
+      data.push(el.innerHTML);
+    });
 
-// ✅ LOAD
-function loadEdits() {
-  const saved = JSON.parse(localStorage.getItem("candidateEdits"));
-  if (!saved) return;
+    localStorage.setItem("candidateEdits", JSON.stringify(data));
+    alert("✅ Changes saved");
+  }
 
-  document.querySelectorAll(editableSelectors).forEach((el, i) => {
-    if (saved[i]) {
-      el.innerHTML = saved[i];
-    }
-  });
-}
+  function loadEdits() {
+    const saved = JSON.parse(localStorage.getItem("candidateEdits"));
+    if (!saved) return;
 
-// ✅ EXPORT
-function exportHTML() {
-  const html = document.documentElement.outerHTML;
-  const blob = new Blob([html], { type: "text/html" });
+    document.querySelectorAll(editableSelectors).forEach((el, i) => {
+      if (saved[i]) el.innerHTML = saved[i];
+    });
+  }
 
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "candidate_presentation.html";
-  link.click();
-}
+  function exportHTML() {
+    const html = document.documentElement.outerHTML;
+    const blob = new Blob([html], { type: "text/html" });
 
-// ✅ BUTTON CREATOR
-function createBtn(text, top, action) {
-  const btn = document.createElement("button");
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "candidate_presentation.html";
+    link.click();
+  }
 
-  btn.innerText = text;
-  btn.style.position = "fixed";
-  btn.style.top = top;
-  btn.style.right = "20px";
-  btn.style.zIndex = "999";
-  btn.style.padding = "10px 14px";
-  btn.style.background = "#C9A84C";
-  btn.style.border = "none";
-  btn.style.borderRadius = "20px";
-  btn.style.cursor = "pointer";
+  function createButton(text, top, action) {
+    const btn = document.createElement("button");
 
-  btn.onclick = action;
+    btn.innerText = text;
+    btn.style.position = "fixed";
+    btn.style.top = top;
+    btn.style.right = "20px";
+    btn.style.zIndex = "1000";
+    btn.style.padding = "10px 14px";
+    btn.style.background = "#C9A84C";
+    btn.style.border = "none";
+    btn.style.borderRadius = "20px";
+    btn.style.cursor = "pointer";
+    btn.style.fontWeight = "600";
 
-  return btn;
-}
+    btn.onclick = action;
 
-// ✅ CREATE BUTTONS
-function createButtons() {
-  const editBtn = createBtn("Edit Mode", "20px", toggleEditMode);
-  const saveBtn = createBtn("Save", "70px", saveEdits);
-  const exportBtn = createBtn("Export File", "120px", exportHTML);
+    document.body.appendChild(btn);
+  }
 
-  document.body.appendChild(editBtn);
-  document.body.appendChild(saveBtn);
-  document.body.appendChild(exportBtn);
-}
+  // ✅ CREATE BUTTONS
+  createButton("Edit Mode", "20px", toggleEditMode);
+  createButton("Save", "70px", saveEdits);
+  createButton("Export File", "120px", exportHTML);
 
-// ✅ INIT
-window.addEventListener("load", () => {
-  createButtons();
+  // ✅ LOAD SAVED CONTENT
   loadEdits();
+
 });
 </script>
-``
+
 </body>
 </html>
