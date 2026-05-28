@@ -988,16 +988,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-});
-  
- // ✅ stats logic here
-});
-
+}); // ✅ ONLY ONE closing here
   
 // ✅ Navigation functions OUTSIDE
 function goTo(idx) { ... }
 function changeSlide(dir) { ... }
 
+document.addEventListener('keydown', e => { ... });
 // ✅ Key navigation OUTSIDE
 document.addEventListener('keydown', e => { ... });
 
