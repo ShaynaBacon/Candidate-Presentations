@@ -1,37 +1,4 @@
-<script>
-let editMode = false;
-
-function toggleEditMode(){
-  editMode = !editMode;
-
-  // ✅ Automatically target ALL text content areas
-  const elements = document.querySelectorAll(
-    '.name, .role, .headline, .stat-card, .skill-pill, .tl-role, .tl-company, .tl-dur, .tl-desc, .case-title, .case-challenge, .case-client, .closing-tagline, li'
-  );
-
-  elements.forEach(el => {
-    el.contentEditable = editMode;
-    el.style.outline = editMode ? "2px dashed #C9A84C" : "none";
-  });
-}
-
-// ✅ Add button dynamically (no manual placement needed)
-const btn = document.createElement("button");
-btn.innerText = "Toggle Edit Mode";
-btn.style.position = "fixed";
-btn.style.top = "20px";
-btn.style.right = "20px";
-btn.style.zIndex = "999";
-btn.style.padding = "10px 14px";
-btn.style.background = "#C9A84C";
-btn.style.border = "none";
-btn.style.borderRadius = "20px";
-btn.style.cursor = "pointer";
-
-btn.onclick = toggleEditMode;
-
-document.body.appendChild(btn);
-</script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -953,6 +920,39 @@ document.body.appendChild(btn);
     const dx = e.changedTouches[0].clientX - startX;
     if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
   });
+</script><script>
+let editMode = false;
+
+function toggleEditMode(){
+  editMode = !editMode;
+
+  // ✅ Automatically target ALL text content areas
+  const elements = document.querySelectorAll(
+    '.name, .role, .headline, .stat-card, .skill-pill, .tl-role, .tl-company, .tl-dur, .tl-desc, .case-title, .case-challenge, .case-client, .closing-tagline, li'
+  );
+
+  elements.forEach(el => {
+    el.contentEditable = editMode;
+    el.style.outline = editMode ? "2px dashed #C9A84C" : "none";
+  });
+}
+
+// ✅ Add button dynamically (no manual placement needed)
+const btn = document.createElement("button");
+btn.innerText = "Toggle Edit Mode";
+btn.style.position = "fixed";
+btn.style.top = "20px";
+btn.style.right = "20px";
+btn.style.zIndex = "999";
+btn.style.padding = "10px 14px";
+btn.style.background = "#C9A84C";
+btn.style.border = "none";
+btn.style.borderRadius = "20px";
+btn.style.cursor = "pointer";
+
+btn.onclick = toggleEditMode;
+
+document.body.appendChild(btn);
 </script>
 </body>
 </html>
