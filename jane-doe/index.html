@@ -956,69 +956,56 @@
 <script>
 
   // 1️⃣ NAVIGATION (leave this EXACTLY as it was)
-let slides, dots, counter;
-let current = 0;
+<script>
+  let slides, dots, counter;
+  let current = 0;
 
-  // ✅ Initialize after DOM loads
-document.addEventListener("DOMContentLoaded", () => {
+  // ✅ Initialize EVERYTHING after DOM loads
+  document.addEventListener("DOMContentLoaded", () => {
 
-  slides = document.querySelectorAll('.slide');
-  dots = document.querySelectorAll('.nav-dot');
-  counter = document.getElementById('slide-counter');
+    // Navigation setup
+    slides = document.querySelectorAll('.slide');
+    dots = document.querySelectorAll('.nav-dot');
+    counter = document.getElementById('slide-counter');
 
-  const statsContainer = document.getElementById("statsContainer");
+    // ✅ Stats automation
+    const statsContainer = document.getElementById("statsContainer");
 
-  if (statsContainer && window.data) {
-    data.stats.forEach(stat => {
-      const div = document.createElement("div");
-      div.className = "stat-card";
+    if (statsContainer && window.data) {
+      data.stats.forEach(stat => {
+        const div = document.createElement("div");
+        div.className = "stat-card";
 
-      const parts = stat.split(" ");
+        const parts = stat.split(" ");
 
-      div.innerHTML = `
-        <div class="stat-num">
-          ${parts[0]}<span>${parts[1] ? '+' : ''}</span>
-        </div>
-        <div class="stat-label">
-          ${parts.slice(1).join(" ")}
-        </div>
-      `;
+        div.innerHTML = `
+          <div class="stat-num">
+            ${parts[0]}<span>${parts[1] ? '+' : ''}</span>
+          </div>
+          <div class="stat-label">
+            ${parts.slice(1).join(" ")}
+          </div>
+        `;
 
-      statsContainer.appendChild(div);
-    });
-  }
+        statsContainer.appendChild(div);
+      });
+    }
 
-}); // ✅ ONLY ONE closing here
-  
-// ✅ Navigation functions OUTSIDE
-function goTo(idx) { ... }
-function changeSlide(dir) { ... }
+    // ✅ Skills automation
+    const skillsContainer = document.getElementById("skillsContainer");
 
-document.addEventListener('keydown', e => { ... });
-// ✅ Key navigation OUTSIDE
-document.addEventListener('keydown', e => { ... });
+    if (skillsContainer && window.data) {
+      data.skills.forEach(skill => {
+        const span = document.createElement("span");
+        span.className = "skill-pill highlight";
+        span.textContent = skill;
+        skillsContainer.appendChild(span);
+      });
+    }
 
-  if (statsContainer && window.data) {
-    data.stats.forEach(stat => {
-      const div = document.createElement("div");
-      div.className = "stat-card";
+  });
 
-      const parts = stat.split(" ");
-
-      div.innerHTML = `
-        <div class="stat-num">
-          ${parts[0]}<span>${parts[1] ? '+' : ''}</span>
-        </div>
-        <div class="stat-label">
-          ${parts.slice(1).join(" ")}
-        </div>
-      `;
-
-      statsContainer.appendChild(div);
-    });
-  }
-});
-
+  // ✅ Navigation functions
   function goTo(idx) {
     if (idx === current) return;
 
@@ -1049,33 +1036,15 @@ document.addEventListener('keydown', e => { ... });
     if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') changeSlide(-1);
   });
 
-  // 2️⃣ ✅ STATS AUTOMATION (NOW SAFE)
-  document.addEventListener("DOMContentLoaded", () => {
-
-    const statsContainer = document.getElementById("statsContainer");
-
-    if (statsContainer && window.data) {
-      data.stats.forEach(stat => {
-        const div = document.createElement("div");
-        div.className = "stat-card";
-
-        const parts = stat.split(" ");
-
-        div.innerHTML = `
-          <div class="stat-num">
-            ${parts[0]}<span>${parts[1] ? '+' : ''}</span>
-          </div>
-          <div class="stat-label">
-            ${parts.slice(1).join(" ")}
-          </div>
-        `;
-
-        statsContainer.appendChild(div);
-      });
-    }
-
+  // ✅ Touch support
+  let startX = 0;
+  document.addEventListener('touchstart', e => { startX = e.touches[0].clientX; });
+  document.addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - startX;
+    if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
   });
 
 </script>
+
 </body>
 </html>
