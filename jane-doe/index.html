@@ -1,4 +1,41 @@
-<!DOCTYPE html>
+<script>
+  const data = {
+    firstName: "Srinika",
+    lastName: "Patloori",
+    role: "Senior Fullstack Developer",
+    experience: "12+ years",
+    industries: "Insurance, Enterprise Platforms",
+    summary: "Senior fullstack engineer with 12+ years building scalable microservices, cloud-native applications, and modern Angular/React frontends.",
+    
+    skills: ["Java", "Spring Boot", "Angular", "React", "AWS", "Kafka"],
+
+    stats: [
+      "12+ Years Experience",
+      "Enterprise Full Stack",
+      "AWS + Microservices",
+      "Insurance Domain"
+    ],
+
+    caseStudies: [
+      {
+        title: "Insurance Platform Modernization",
+        client: "TCS / AIG",
+        impact: "Built scalable microservices and Angular UI for underwriting and claims systems"
+      },
+      {
+        title: "Distributed Cloud Platform",
+        client: "Amazon",
+        impact: "Designed event-driven microservices using Kafka improving scalability"
+      },
+      {
+        title: "Enterprise Insurance Portal",
+        client: "Nationwide",
+        impact: "Modernized Angular UI and optimized backend APIs"
+      }
+    ]
+  };
+</script>
+``<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -487,33 +524,11 @@
         </div>
       </div>
 
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-num">15<span>+</span></div>
-          <div class="stat-label">Years of Experience</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">10<span>+</span></div>
-          <div class="stat-label">Enterprise Clients</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">3<span>×</span></div>
-          <div class="stat-label">Returned to New Era</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-num">2</div>
-          <div class="stat-label">Industry Verticals (HC & FS)</div>
-        </div>
-
+      <div class="stats-grid" id="statsContainer"></div>
         <div class="stat-card" style="grid-column: span 2; --tl: var(--gold);">
           <div style="font-size:12px; text-transform:uppercase; letter-spacing:0.12em; color:var(--gold); margin-bottom:12px; font-weight:600;">Core Stack</div>
           <div style="display:flex; flex-wrap:wrap; gap:7px;">
-            <span class="skill-pill highlight">C# / .NET Core</span>
-            <span class="skill-pill highlight">Angular</span>
-            <span class="skill-pill highlight">React</span>
-            <span class="skill-pill highlight">Azure</span>
-            <span class="skill-pill highlight">Entity Framework</span>
-            <span class="skill-pill highlight">REST / GraphQL</span>
+       <div id="skillsContainer"></div>
           </div>
         </div>
       </div>
@@ -920,6 +935,30 @@
     const dx = e.changedTouches[0].clientX - startX;
     if (Math.abs(dx) > 50) changeSlide(dx < 0 ? 1 : -1);
   });
+document.addEventListener("DOMContentLoaded", () => {
+  const statsContainer = document.getElementById("statsContainer");
+
+  if (statsContainer) {
+    data.stats.forEach(stat => {
+      const div = document.createElement("div");
+      div.className = "stat-card";
+
+      const parts = stat.split(" ");
+
+      div.innerHTML = `
+        <div class="stat-num">
+          ${parts[0]}<span>${parts[1] ? '+' : ''}</span>
+        </div>
+        <div class="stat-label">
+          ${parts.slice(1).join(" ")}
+        </div>
+      `;
+
+      statsContainer.appendChild(div);
+    });
+  }
+});
+}
 </script>
 </body>
 </html>
