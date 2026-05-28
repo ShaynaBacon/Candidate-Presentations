@@ -3,260 +3,263 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Candidate Dashboard</title>
 
-<title>Candidate Presentation</title>
-
-<!-- ✅ PDF LIB -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.jsscript>
 
 <style>
-body{
-  margin:0;
-  font-family:'Segoe UI',sans-serif;
-  background:#003B46;
-  color:white;
-  overflow:hidden;
+body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
+  background: #003B46;
+  color: white;
 }
 
-.slide{
-  position:absolute;
-  width:100%;
-  height:100%;
-  display:none;
-  padding:60px;
-}
-.slide.active{display:block;}
-
-h1{font-size:60px;}
-h1 span{display:block;color:#C9A84C;}
-
-#role{opacity:.7;}
-#summary{margin:20px 0;max-width:500px;}
-
-textarea{
-  width:90%;
-  height:150px;
-  margin-top:10px;
+#dashboard {
+  padding: 20px;
 }
 
-#statsContainer,#skillsContainer{
-  margin-top:20px;
+.card {
+  background: rgba(255,255,255,0.08);
+  padding: 12px;
+  margin: 10px;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
-.stat-card{
-  display:inline-block;
-  background:rgba(255,255,255,.08);
-  padding:15px;
-  margin:6px;
-  border-radius:12px;
+.slide {
+  display: none;
+  padding: 40px;
 }
 
-.skill-pill{
-  background:#07575B;
-  padding:6px 12px;
-  margin:5px;
-  border-radius:20px;
-  display:inline-block;
+.slide.active {
+  display: block;
 }
 
-#caseContainer{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
+button {
+  padding: 10px;
+  margin: 5px;
+  border-radius: 20px;
+  border: none;
+  background: #C9A84C;
+  color: #003B46;
+  cursor: pointer;
 }
 
-.case-card{
-  background:rgba(255,255,255,.07);
-  padding:15px;
-  border-radius:12px;
+.skill-pill {
+  display: inline-block;
+  padding: 5px 10px;
+  margin: 5px;
+  border-radius: 20px;
+  background: #07575B;
 }
 
-#nav{
-  position:fixed;
-  bottom:20px;
-  left:50%;
-  transform:translateX(-50%);
+.case-card {
+  background: rgba(255,255,255,0.08);
+  padding: 10px;
+  margin: 10px;
+  border-radius: 10px;
 }
 
-button{
-  padding:10px 14px;
-  margin:5px;
-  background:#C9A84C;
-  color:#003B46;
-  border:none;
-  border-radius:20px;
-  cursor:pointer;
+#nav {
+  position: fixed;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
 }
 </style>
 </head>
 
 <body>
 
-<!-- ✅ SLIDE 0 (INPUT) -->
-<div class="slide active">
-  <h2>Paste Resume</h2>
+<!-- ✅ DASHBOARD -->
+<div id="dashboard">
+  <h2>Candidate Dashboard</h2>
 
-  <textarea id="resumeInput" placeholder="Paste resume here..."></textarea><br>
+  <textarea id="resumeInput" placeholder="Paste resume here..." rows="6" style="width:95%;"></textarea><br>
 
-  <button onclick="generateFromResume()">Generate Presentation</button>
+  <button onclick="generateCandidate()">Generate Candidate</button>
+
+  <div id="candidateList"></div>
 </div>
 
-<!-- ✅ SLIDE 1 -->
-<div class="slide">
-  <h1><span id="firstName"></span><span id="lastName"></span></h1>
-  <div id="role"></div>
-  <div id="summary"></div>
+<!-- ✅ PRESENTATION -->
+<div id="presentation" style="display:none;">
 
-  <div id="statsContainer"></div>
-  <div id="skillsContainer"></div>
-</div>
+  <!-- SLIDE 1 -->
+  <div class="slide active">
+    <h1 id="name"></h1>
+    <h3 id="role"></h3>
+    <p id="summary"></p>
 
-<!-- ✅ SLIDE 2 -->
-<div class="slide">
-  <h2>Case Studies</h2>
-  <div id="caseContainer"></div>
-</div>
+    <div id="stats"></div>
+    <div id="skills"></div>
+  </div>
 
-<!-- ✅ SLIDE 3 -->
-<div class="slide">
-  <h2>Recruiter Score</h2>
-  <h1 id="scoreContainer"></h1>
+  <!-- SLIDE 2 -->
+  <div class="slide">
+    <h2>Case Studies</h2>
+    <div id="cases"></div>
+  </div>
 
-  <h3>Strengths</h3>
-  <ul id="strengths"></ul>
+  <!-- SLIDE 3 -->
+  <div class="slide">
+    <h2>Recruiter Score</h2>
+    <h1 id="score"></h1>
 
-  <h3>Watchouts</h3>
-  <ul id="watchouts"></ul>
+    <h3>Strengths</h3>
+    <ul id="strengths"></ul>
 
-  <h3>Recommendation</h3>
-  <p id="recommendation"></p>
-</div>
+    <h3>Watchouts</h3>
+    <ul id="risks"></ul>
 
-<!-- ✅ NAV -->
-<div id="nav">
-  <button onclick="changeSlide(-1)">Prev</button>
-  <button onclick="changeSlide(1)">Next</button>
-  <button onclick="downloadPDF()">Download PDF</button>
+    <h3>Recommendation</h3>
+    <p id="rec"></p>
+  </div>
+
+  <div id="nav">
+    <button onclick="changeSlide(-1)">Prev</button>
+    <button onclick="changeSlide(1)">Next</button>
+    <button onclick="downloadPDF()">PDF</button>
+  </div>
+
 </div>
 
 <script>
 
-let slides;
-let current=0;
-let data={};
+let slides, current = 0;
+let candidates = [];
+let activeData = null;
+
+function changeSlide(dir){
+  current = (current + dir + slides.length) % slides.length;
+  showSlide(current);
+}
 
 function showSlide(i){
   slides.forEach(s=>s.classList.remove("active"));
   slides[i].classList.add("active");
 }
 
-function changeSlide(dir){
-  current=(current+dir+slides.length)%slides.length;
-  showSlide(current);
+/* ✅ ROLE DETECTION */
+function detectRole(text){
+  if(text.includes("java")) return "Java Developer";
+  if(text.includes(".net") || text.includes("c#")) return ".NET Developer";
+  if(text.includes("react") || text.includes("frontend")) return "React Developer";
+  return "Fullstack Developer";
 }
 
-function generateFromResume(){
+/* ✅ AUTO PARSING */
+function generateCandidate(){
+  const text = document.getElementById("resumeInput").value.toLowerCase();
 
-  const text=document.getElementById("resumeInput").value.toLowerCase();
+  const role = detectRole(text);
 
-  // ✅ VERY SIMPLE extraction logic
-  data={
-    firstName:"Candidate",
-    lastName:"Profile",
-    role: text.includes("java") ? "Java Fullstack Developer" : "Fullstack Developer",
-    summary:"Experienced developer extracted from resume input.",
+  const data = {
+    name: "New Candidate",
+    role: role,
+    summary: "Auto-generated candidate based on resume input.",
 
-    stats:[
-      text.includes("years") ? "10+ Years Experience" : "Experienced Developer",
-      text.includes("aws") ? "AWS Cloud" : "Cloud Ready",
-      text.includes("microservices") ? "Microservices" : "Enterprise Systems",
+    stats: [
+      text.includes("10") ? "10+ Years" : "Experienced",
+      role,
+      text.includes("aws") ? "AWS" : "Cloud",
       "Full Stack"
     ],
 
-    skills:[
+    skills: [
       text.includes("java") && "Java",
-      text.includes("spring") && "Spring Boot",
-      text.includes("angular") && "Angular",
+      text.includes("spring") && "Spring",
       text.includes("react") && "React",
-      text.includes("aws") && "AWS"
+      text.includes("angular") && "Angular",
+      text.includes("aws") && "AWS",
+      text.includes(".net") && ".NET"
     ].filter(Boolean),
 
-    caseStudies:[
-      {title:"Enterprise System", client:"Client A", impact:"Worked on enterprise platform"},
-      {title:"Cloud Migration", client:"Client B", impact:"Built scalable cloud services"},
-      {title:"UI Modernization", client:"Client C", impact:"Improved frontend experience"}
+    caseStudies: [
+      {title:"Enterprise Work", impact:"Worked on production systems"},
+      {title:"Cloud Systems", impact:"Handled scalable systems"},
+      {title:"UI Work", impact:"Built modern UI"}
     ],
 
     score:{
       rating:"8/10",
-      strengths:["Strong backend","Cloud exposure","Enterprise systems"],
-      risks:["Details need validation"],
-      recommendation:"Proceed to interview"
+      strengths:["Strong experience","Relevant stack"],
+      risks:["Need deeper validation"],
+      rec:"Proceed"
     }
   };
 
-  renderData();
-  changeSlide(1);
+  candidates.push(data);
+  renderDashboard();
 }
 
-function renderData(){
+/* ✅ DASHBOARD VIEW */
+function renderDashboard(){
+  const list = document.getElementById("candidateList");
+  list.innerHTML="";
 
-  firstName.textContent=data.firstName;
-  lastName.textContent=data.lastName;
-  role.textContent=data.role;
-  summary.textContent=data.summary;
+  candidates.forEach((c,i)=>{
+    const div = document.createElement("div");
+    div.className="card";
+    div.innerHTML=`<b>${c.name}</b><br>${c.role}`;
+    div.onclick=()=>openCandidate(c);
+    list.appendChild(div);
+  });
+}
 
-  statsContainer.innerHTML="";
+/* ✅ PRESENTATION VIEW */
+function openCandidate(data){
+  activeData = data;
+
+  document.getElementById("dashboard").style.display="none";
+  document.getElementById("presentation").style.display="block";
+
+  slides = document.querySelectorAll(".slide");
+  current = 0;
+
+  document.getElementById("name").textContent=data.name;
+  document.getElementById("role").textContent=data.role;
+  document.getElementById("summary").textContent=data.summary;
+
+  renderBlocks(data);
+}
+
+function renderBlocks(data){
+  stats.innerHTML="";
   data.stats.forEach(s=>{
-    const div=document.createElement("div");
-    div.className="stat-card";
-    div.textContent=s;
-    statsContainer.appendChild(div);
+    stats.innerHTML += `<div class="card">${s}</div>`;
   });
 
-  skillsContainer.innerHTML="";
+  skills.innerHTML="";
   data.skills.forEach(s=>{
-    const div=document.createElement("div");
-    div.className="skill-pill";
-    div.textContent=s;
-    skillsContainer.appendChild(div);
+    skills.innerHTML += `<span class="skill-pill">${s}</span>`;
   });
 
-  caseContainer.innerHTML="";
+  cases.innerHTML="";
   data.caseStudies.forEach(c=>{
-    const div=document.createElement("div");
-    div.className="case-card";
-    div.innerHTML=`<b>${c.title}</b><br>${c.client}<br>${c.impact}`;
-    caseContainer.appendChild(div);
+    cases.innerHTML += `<div class="case-card"><b>${c.title}</b><br>${c.impact}</div>`;
   });
 
-  scoreContainer.textContent=data.score.rating;
+  score.textContent=data.score.rating;
 
   strengths.innerHTML="";
   data.score.strengths.forEach(s=>{
-    const li=document.createElement("li");
-    li.textContent=s;
-    strengths.appendChild(li);
+    strengths.innerHTML += `<li>${s}</li>`;
   });
 
-  watchouts.innerHTML="";
+  risks.innerHTML="";
   data.score.risks.forEach(r=>{
-    const li=document.createElement("li");
-    li.textContent=r;
-    watchouts.appendChild(li);
+    risks.innerHTML += `<li>${r}</li>`;
   });
 
-  recommendation.textContent=data.score.recommendation;
+  rec.textContent=data.score.rec;
 }
 
-// PDF
+/* ✅ PDF */
 function downloadPDF(){
   html2pdf().from(document.body).save("Candidate.pdf");
 }
-
-document.addEventListener("DOMContentLoaded",()=>{
-  slides=document.querySelectorAll(".slide");
-});
 
 </script>
 
