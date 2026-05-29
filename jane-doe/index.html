@@ -934,153 +934,128 @@ function previewStars(idx,val){
   const stars=rows[idx].querySelectorAll('.star');
   stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
 }
-</script>
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1);
-  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
-});
-
-let sx=0;
-document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
-document.addEventListener('touchend',e=>{
-  const dx=e.changedTouches[0].clientX-sx;
-  if(Math.abs(dx)>50)go(dx<0?1:-1);
-});
-
-// ── PHOTO UPLOAD ──
-const photoInput=document.getElementById('photoInput');
-const candidatePhoto=document.getElementById('candidatePhoto');
-const photoPlaceholder=document.querySelector('.photo-placeholder');
-photoInput.addEventListener('change',e=>{
-  const file=e.target.files[0];
-  if(!file)return;
-  const reader=new FileReader();
-  reader.onload=ev=>{
-    candidatePhoto.src=ev.target.result;
-    candidatePhoto.classList.add('loaded');
-    photoPlaceholder.style.display='none';
-  };
-  reader.readAsDataURL(file);
-});
-
-// ── INTERACTIVE SKILL TABS ──
-const skillData = {
-  languages: {
-    desc: 'Core programming languages used across enterprise fullstack projects.',
-    items: ['C#','TypeScript','JavaScript','SQL','HTML / CSS','PowerShell','Bash']
-  },
-  frameworks: {
-    desc: 'Frameworks and libraries powering frontend and backend delivery.',
-    items: ['.NET Core','.NET Framework','Angular','React','Entity Framework','NgRx','Angular Material']
-  },
-  cloud: {
-    desc: 'Azure-centric cloud expertise including identity, DevOps, and API management.',
-    items: ['Microsoft Azure','Azure AD B2C','Azure DevOps','Azure APIM','Azure Front Door','OAuth 2.0','CI / CD']
-  },
-  databases: {
-    desc: 'Data persistence, integration pipelines, and development tooling.',
-    items: ['SQL Server','MongoDB','SSIS','Git / TFS','Visual Studio','VS Code','Postman','Fiddler']
-  },
-  protocols: {
-    desc: 'API design patterns and communication protocols across distributed systems.',
-    items: ['REST','GraphQL','SOAP','CQRS','Agile / Scrum','Clean Architecture']
-  }
-};
-
-const skillPanel = document.getElementById('skillPanel');
-const skillCatDesc = document.getElementById('skillCatDesc');
-const tabs = document.querySelectorAll('.stab');
-
-function renderSkills(cat) {
-  const data = skillData[cat];
-  skillCatDesc.textContent = data.desc;
-  skillPanel.classList.remove('animating');
-  void skillPanel.offsetWidth; // reflow
-  skillPanel.classList.add('animating');
-  skillPanel.innerHTML = data.items.map(item => `
-    <div class="sk-tag">
-      <div class="sk-tag-dot"></div>
-      <span class="sk-tag-name">${item}</span>
-    </div>
-  `).join('');
-}
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    renderSkills(tab.dataset.cat);
-  });
-});
-
-// Init
-renderSkills('languages');
-
-// ── STAR RATINGS ──
-const expertise=[
-  {label:'C# / .NET Core', stars:5},
-  {label:'Angular & React', stars:5},
-  {label:'Microsoft Azure', stars:4},
-  {label:'Enterprise APIs', stars:5},
-  {label:'Azure AD B2C',   stars:4},
-];
-const list=document.getElementById('expertiseList');
-expertise.forEach((item,i)=>{
-  const row=document.createElement('div');
-  row.className='ep-item';
-  const lbl=document.createElement('span');
-  lbl.className='ep-label';
-  lbl.textContent=item.label;
-  const stars=document.createElement('div');
-  stars.className='ep-stars';
-  for(let s=1;s<=5;s++){
-    const star=document.createElement('span');
-    star.className='star'+(s<=item.stars?' on':'');
-    star.textContent='★';
-    star.dataset.idx=i;
-    star.dataset.val=s;
-    star.addEventListener('click',function(){
-      const val=parseInt(this.dataset.val);
-      const idx=parseInt(this.dataset.idx);
-      expertise[idx].stars=val;
-      renderStars(idx,val);
-    });
-    star.addEventListener('mouseover',function(){
-      const val=parseInt(this.dataset.val);
-      const idx=parseInt(this.dataset.idx);
-      previewStars(idx,val);
-    });
-    star.addEventListener('mouseleave',function(){
-      const idx=parseInt(this.dataset.idx);
-      renderStars(idx,expertise[idx].stars);
-    });
-    stars.appendChild(star);
-  }
-  row.appendChild(lbl);
-  row.appendChild(stars);
-  list.appendChild(row);
-});
-
-function renderStars(idx,val){
-  const rows=list.querySelectorAll('.ep-item');
-  const stars=rows[idx].querySelectorAll('.star');
-  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
-}
-
-function previewStars(idx,val){
-  const rows=list.querySelectorAll('.ep-item');
-  const stars=rows[idx].querySelectorAll('.star');
-  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
-}
-</script>
-
+<!-- ✅ MAIN DECK SCRIPT -->
 <script>
-window.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", function() {
 
-  let editMode = false;
+  // ── NAVIGATION ──
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=[...document.querySelectorAll('.ndot')];
+  const counter=document.getElementById('counter');
 
-  const editableSelectors = `
+  let cur=0,locked=false;
+
+  window.goTo=function(n){
+    if(n===cur||locked)return;
+    locked=true;
+
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('out-left');
+
+    const prev=cur;
+    setTimeout(()=>slides[prev].classList.remove('out-left'),600);
+
+    dots[cur].classList.remove('active');
+    cur=n;
+
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+    counter.textContent=String(cur+1).padStart(2,'0')+' / 06';
+
+    setTimeout(()=>locked=false,650);
+  }
+
+  window.go=function(d){
+    goTo((cur+d+slides.length)%slides.length);
+  }
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight')go(1);
+    if(e.key==='ArrowLeft')go(-1);
+  });
+
+  // ── PHOTO UPLOAD ──
+  const input=document.getElementById('photoInput');
+  const img=document.getElementById('candidatePhoto');
+  const placeholder=document.querySelector('.photo-placeholder');
+
+  input.addEventListener('change',e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      img.src=ev.target.result;
+      img.classList.add('loaded');
+      placeholder.style.display='none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── STAR RATINGS ──
+  const expertise=[
+    {label:'C# / .NET Core',stars:5},
+    {label:'Angular & React',stars:5},
+    {label:'Microsoft Azure',stars:4},
+    {label:'Enterprise APIs',stars:5},
+    {label:'Azure AD B2C',stars:4},
+  ];
+
+  const list=document.getElementById('expertiseList');
+
+  expertise.forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='ep-item';
+
+    const lbl=document.createElement('span');
+    lbl.className='ep-label';
+    lbl.textContent=item.label;
+
+    const stars=document.createElement('div');
+    stars.className='ep-stars';
+
+    for(let s=1;s<=5;s++){
+      const star=document.createElement('span');
+      star.className='star'+(s<=item.stars?' on':'');
+      star.textContent='★';
+
+      star.onclick=()=>{
+        expertise[i].stars=s;
+        renderStars(i,s);
+      };
+
+      star.onmouseover=()=>previewStars(i,s);
+      star.onmouseleave=()=>renderStars(i,expertise[i].stars);
+
+      stars.appendChild(star);
+    }
+
+    row.appendChild(lbl);
+    row.appendChild(stars);
+    list.appendChild(row);
+  });
+
+  function renderStars(idx,val){
+    const stars=list.querySelectorAll('.ep-item')[idx].querySelectorAll('.star');
+    stars.forEach((s,i)=>s.classList.toggle('on',i<val));
+  }
+
+  function previewStars(idx,val){
+    const stars=list.querySelectorAll('.ep-item')[idx].querySelectorAll('.star');
+    stars.forEach((s,i)=>s.classList.toggle('on',i<val));
+  }
+
+});
+</script>
+
+
+<!-- ✅ EDIT / SAVE / EXPORT -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  let editMode=false;
+
+  const editable=`
     .s1-name, .s1-role, .s1-summary,
     .edu-deg, .edu-sub,
     .stat-n, .stat-l,
@@ -1092,94 +1067,76 @@ window.addEventListener("DOMContentLoaded", () => {
     .s7-tagline
   `;
 
-  function toggleEditMode() {
-    editMode = !editMode;
+  function toggleEdit(){
+    editMode=!editMode;
 
-    document.querySelectorAll(editableSelectors).forEach(el => {
-      el.contentEditable = editMode;
-      el.style.outline = editMode ? "2px dashed #4ac6e9" : "none";
+    document.querySelectorAll(editable).forEach(el=>{
+      el.contentEditable=editMode;
+      el.style.outline=editMode ? "2px dashed #4ac6e9" : "none";
     });
   }
 
-  function saveEdits() {
-    const data = [];
-
-    document.querySelectorAll(editableSelectors).forEach(el => {
-      data.push(el.innerHTML);
-    });
-
-    localStorage.setItem("candidateDeck", JSON.stringify(data));
-    alert("✅ Changes saved");
+  function save(){
+    const data=[...document.querySelectorAll(editable)].map(el=>el.innerHTML);
+    localStorage.setItem("deck",JSON.stringify(data));
+    alert("✅ Saved");
   }
 
-  function loadEdits() {
-    const saved = JSON.parse(localStorage.getItem("candidateDeck"));
-    if (!saved) return;
+  function load(){
+    const saved=JSON.parse(localStorage.getItem("deck"));
+    if(!saved)return;
 
-    document.querySelectorAll(editableSelectors).forEach((el, i) => {
-      if (saved[i]) el.innerHTML = saved[i];
+    document.querySelectorAll(editable).forEach((el,i)=>{
+      if(saved[i]) el.innerHTML=saved[i];
     });
   }
 
-  function exportHTML() {
-    const deck = document.getElementById("deck");
-    const cleanDeck = deck.cloneNode(true);
+  function exportHTML(){
+    const deck=document.getElementById("deck").cloneNode(true);
 
-    cleanDeck.querySelectorAll("[contenteditable]").forEach(el => {
+    deck.querySelectorAll("[contenteditable]").forEach(el=>{
       el.removeAttribute("contenteditable");
-      el.style.outline = "none";
+      el.style.outline="none";
     });
 
-    const html = `
-<!DOCTYPE html>
+    const html=`<!DOCTYPE html>
 <html>
-<head>
-${document.head.innerHTML}
-</head>
-<body>
-${cleanDeck.outerHTML}
-</body>
-</html>
-`;
+<head>${document.head.innerHTML}</head>
+<body>${deck.outerHTML}</body>
+</html>`;
 
-    const blob = new Blob([html], { type: "text/html" });
-    const link = document.createElement("a");
-
-    link.href = URL.createObjectURL(blob);
-    link.download = "candidate_clean.html";
+    const blob=new Blob([html],{type:"text/html"});
+    const link=document.createElement("a");
+    link.href=URL.createObjectURL(blob);
+    link.download="candidate.html";
     link.click();
   }
 
-  function createButton(text, top, action) {
-    const btn = document.createElement("button");
+  function btn(txt,top,fn){
+    const b=document.createElement("button");
 
-    btn.innerText = text;
+    b.innerText=txt;
+    b.style.position="fixed";
+    b.style.top=top;
+    b.style.right="20px";
+    b.style.zIndex="9999";
+    b.style.padding="10px";
+    b.style.background="#4ac6e9";
+    b.style.border="none";
+    b.style.borderRadius="20px";
+    b.style.cursor="pointer";
 
-    btn.style.position = "fixed";
-    btn.style.top = top;
-    btn.style.right = "20px";
-    btn.style.zIndex = "9999";
-    btn.style.padding = "10px 14px";
-    btn.style.background = "#4ac6e9";
-    btn.style.color = "#002d6a";
-    btn.style.border = "none";
-    btn.style.borderRadius = "20px";
-    btn.style.cursor = "pointer";
-    btn.style.fontWeight = "600";
-
-    btn.onclick = action;
-
-    document.body.appendChild(btn);
+    b.onclick=fn;
+    document.body.appendChild(b);
   }
 
-  createButton("Edit Mode", "20px", toggleEditMode);
-  createButton("Save", "70px", saveEdits);
-  createButton("Export File", "120px", exportHTML);
+  btn("Edit", "20px", toggleEdit);
+  btn("Save", "70px", save);
+  btn("Export", "120px", exportHTML);
 
-  loadEdits();
+  load();
 
 });
 </script>
-
 </body>
 </html>
