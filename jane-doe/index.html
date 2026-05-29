@@ -975,24 +975,18 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   function exportHTML() {
+    const deck = document.getElementById("deck");
+    const cleanDeck = deck.cloneNode(true);
 
-  // ✅ ONLY clone the deck (NOT the whole page)
-  const deck = document.getElementById("deck");
-  const cleanDeck = deck.cloneNode(true);
+    cleanDeck.querySelectorAll("[contenteditable]").forEach(el => {
+      el.removeAttribute("contenteditable");
+      el.style.outline = "none";
+    });
 
-  // ✅ Remove edit artifacts
-  cleanDeck.querySelectorAll("[contenteditable]").forEach(el => {
-    el.removeAttribute("contenteditable");
-    el.style.outline = "none";
-  });
-
-  // ✅ Build clean HTML manually (this is the fix)
-  const html = `
+    const html = `
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>Candidate Presentation</title>
 ${document.head.innerHTML}
 </head>
 <body>
@@ -1001,19 +995,18 @@ ${cleanDeck.outerHTML}
 </html>
 `;
 
-  const blob = new Blob([html], { type: "text/html" });
-  const link = document.createElement("a");
+    const blob = new Blob([html], { type: "text/html" });
+    const link = document.createElement("a");
 
-  link.href = URL.createObjectURL(blob);
-  link.download = "candidate_clean.html";
-  link.click();
-}
+    link.href = URL.createObjectURL(blob);
+    link.download = "candidate_clean.html";
+    link.click();
+  }
 
   function createButton(text, top, action) {
     const btn = document.createElement("button");
 
     btn.innerText = text;
-    btn.classList.add("edit-ui");
 
     btn.style.position = "fixed";
     btn.style.top = top;
@@ -1040,5 +1033,6 @@ ${cleanDeck.outerHTML}
 
 });
 </script>
+``
 </body>
 </html>
