@@ -1,4 +1,3 @@
-cat > /mnt/user-data/outputs/jane_doe_new_era_presentation.html << 'HTMLEOF'
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,6 +12,7 @@ cat > /mnt/user-data/outputs/jane_doe_new_era_presentation.html << 'HTMLEOF'
 :root{
   --navy:   #002d6a;
   --blue:   #4ac6e9;
+  --white:  #ffffff;
   --navy2:  #001f4d;
   --blue2:  #2fb3d8;
   --mist:   rgba(74,198,233,0.08);
@@ -30,13 +30,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--navy);font-fam
   position:absolute;inset:0;
   display:flex;flex-direction:column;justify-content:center;align-items:center;
   padding:56px 72px;
-  opacity:0;transform:translateX(56px);
+  opacity:0;
+  transform:translateX(56px);
   transition:opacity .55s cubic-bezier(.4,0,.2,1),transform .55s cubic-bezier(.4,0,.2,1);
-  pointer-events:none;overflow:hidden;
+  pointer-events:none;
+  overflow:hidden;
 }
 .slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
 .slide.out-left{opacity:0;transform:translateX(-56px);}
 
+/* animated children */
 .slide.active .anim{animation:fadeUp .5s both;}
 .slide.active .anim:nth-child(1){animation-delay:.05s}
 .slide.active .anim:nth-child(2){animation-delay:.12s}
@@ -44,7 +47,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--navy);font-fam
 .slide.active .anim:nth-child(4){animation-delay:.26s}
 @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
 
-/* ── BACKGROUNDS ── */
+/* ── BACKGROUND LAYERS ── */
 .bg{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
 .bg-grid{
   position:absolute;inset:0;
@@ -52,15 +55,28 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--navy);font-fam
                    linear-gradient(90deg,rgba(74,198,233,.07) 1px,transparent 1px);
   background-size:52px 52px;
 }
-.bg-glow{position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;background:radial-gradient(circle,var(--blue) 0%,transparent 70%);opacity:.12;}
-.bg-corner{position:absolute;bottom:-120px;right:-80px;width:460px;height:460px;border-radius:50%;background:radial-gradient(circle,rgba(74,198,233,.18) 0%,transparent 65%);pointer-events:none;}
+.bg-glow{
+  position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;
+  background:radial-gradient(circle,var(--blue) 0%,transparent 70%);
+  opacity:.12;
+}
+.bg-corner{
+  position:absolute;bottom:-120px;right:-80px;
+  width:460px;height:460px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(74,198,233,.18) 0%,transparent 65%);
+  pointer-events:none;
+}
 
-/* ── TOP BAR ── */
+/* ── CHROME ── */
 #topbar{
   position:fixed;top:0;left:0;right:0;height:52px;
   display:flex;align-items:center;justify-content:space-between;
-  padding:0 32px;background:rgba(0,29,78,.7);backdrop-filter:blur(14px);
-  border-bottom:1px solid var(--border);z-index:200;
+  padding:0 32px;
+  background:rgba(0,29,78,.7);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  z-index:200;
 }
 .brand{display:flex;align-items:center;gap:10px;}
 .brand-dot{width:9px;height:9px;border-radius:50%;background:var(--blue);}
@@ -68,88 +84,91 @@ html,body{width:100%;height:100%;overflow:hidden;background:var(--navy);font-fam
 .brand-text span{color:var(--blue);}
 #counter{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);}
 
-/* ── NAV ── */
+/* ── NAV BAR ── */
 #navbar{
   position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
   display:flex;align-items:center;gap:10px;
   background:rgba(0,29,78,.75);backdrop-filter:blur(14px);
-  border:1px solid var(--border);border-radius:40px;padding:9px 18px;z-index:200;
+  border:1px solid var(--border);border-radius:40px;
+  padding:9px 18px;z-index:200;
 }
-.ndot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.2);cursor:pointer;transition:all .3s;}
+.ndot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,255,255,.2);cursor:pointer;
+  transition:all .3s;
+}
 .ndot.active{width:22px;border-radius:4px;background:var(--blue);}
-.nbtn{background:none;border:none;color:#fff;cursor:pointer;font-size:17px;opacity:.45;transition:opacity .2s;padding:2px 5px;line-height:1;}
+.nbtn{
+  background:none;border:none;color:#fff;cursor:pointer;
+  font-size:17px;opacity:.45;transition:opacity .2s;padding:2px 5px;line-height:1;
+}
 .nbtn:hover{opacity:1;}
 
-/* ── EDIT TOOLBAR ── */
-#edit-toolbar{
-  position:fixed;top:64px;right:20px;
-  display:flex;flex-direction:column;gap:8px;
-  z-index:9999;
-}
-.etbtn{
-  display:flex;align-items:center;gap:8px;
-  padding:9px 16px;border-radius:24px;border:none;cursor:pointer;
-  font-family:'Outfit',sans-serif;font-size:12px;font-weight:600;letter-spacing:.06em;
-  text-transform:uppercase;transition:all .2s;white-space:nowrap;
-  box-shadow:0 4px 16px rgba(0,0,0,.3);
-}
-#btn-edit{background:rgba(0,29,78,.9);border:1px solid var(--border);color:var(--blue);}
-#btn-edit:hover{background:rgba(74,198,233,.15);}
-#btn-edit.active{background:rgba(74,198,233,.25);border-color:rgba(74,198,233,.6);color:#fff;}
-#btn-save{background:rgba(0,29,78,.9);border:1px solid rgba(74,198,233,.3);color:rgba(255,255,255,.7);}
-#btn-save:hover{background:rgba(74,198,233,.2);color:#fff;}
-#btn-export{background:var(--blue);color:var(--navy2);}
-#btn-export:hover{background:#6dd4f0;transform:translateY(-1px);}
-
-/* Edit mode highlight */
-body.edit-mode [contenteditable="true"]{
-  outline:2px dashed rgba(74,198,233,.6)!important;
-  border-radius:4px;
-  background:rgba(74,198,233,.04)!important;
-  cursor:text;
-}
-body.edit-mode [contenteditable="true"]:focus{
-  outline:2px solid var(--blue)!important;
-  background:rgba(74,198,233,.08)!important;
-}
-.edit-hint{
-  position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
-  background:rgba(74,198,233,.15);border:1px solid rgba(74,198,233,.35);
-  color:var(--blue);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
-  padding:7px 18px;border-radius:20px;z-index:300;
-  opacity:0;transition:opacity .3s;pointer-events:none;
-}
-.edit-hint.show{opacity:1;}
-
 /* ── SHARED ATOMS ── */
-.eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--blue);font-weight:600;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.eyebrow{
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--blue);font-weight:600;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
 .eyebrow::before{content:'';width:24px;height:1px;background:var(--blue);display:block;}
+
+.serif{font-family:'Cormorant Garamond',serif;}
+.h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,5.5vw,78px);font-weight:700;line-height:.95;}
+.h1 em{font-style:italic;color:var(--blue);}
 .h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,50px);font-weight:700;line-height:1.05;}
 .h2 em{font-style:italic;color:var(--blue);}
-.tag{display:inline-flex;align-items:center;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;border:1px solid var(--border);color:var(--blue);background:rgba(74,198,233,.08);}
 
-/* ══════════════════════════════════════
-   SLIDE 1 — TITLE
-══════════════════════════════════════ */
+.card{
+  background:var(--mist);
+  border:1px solid var(--border);
+  border-radius:16px;padding:22px 26px;
+}
+.tag{
+  display:inline-flex;align-items:center;
+  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  border:1px solid var(--border);color:var(--blue);background:rgba(74,198,233,.08);
+}
+.pill{
+  display:inline-block;padding:4px 13px;border-radius:20px;font-size:12px;font-weight:500;
+  background:rgba(74,198,233,.1);border:1px solid rgba(74,198,233,.22);color:rgba(255,255,255,.75);
+  transition:all .18s;
+}
+.pill:hover,.pill.hi{background:rgba(74,198,233,.25);border-color:rgba(74,198,233,.5);color:#fff;}
+.divider{width:100%;height:1px;background:var(--border);margin:18px 0;}
+
+/* ════════════════════════════
+   SLIDE 1 — TITLE / STATS
+════════════════════════════ */
 #s1{background:var(--navy2);align-items:flex-start;}
-.s1-grid{display:grid;grid-template-columns:1fr 380px;gap:52px;width:100%;max-width:1160px;align-items:start;}
+.s1-grid{display:grid;grid-template-columns:1fr 400px;gap:52px;width:100%;max-width:1160px;align-items:start;}
 
-.s1-name{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,6vw,84px);font-weight:700;line-height:.9;}
+.s1-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,6vw,84px);font-weight:700;line-height:.9;
+}
 .s1-name .first{display:block;}
 .s1-name .last{display:block;font-style:italic;color:var(--blue);}
-.s1-role{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);margin-top:16px;margin-bottom:8px;}
+.s1-role{
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-dim);margin-top:16px;margin-bottom:8px;
+}
 .s1-loc{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:6px;margin-bottom:20px;}
 .s1-summary{font-size:13px;line-height:1.75;color:var(--text-mid);font-weight:300;}
-.edu-box{margin-top:16px;background:var(--mist);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:14px;}
+
+.edu-box{
+  margin-top:16px;background:var(--mist);border:1px solid var(--border);border-radius:12px;padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+}
 .edu-icon{font-size:20px;}
 .edu-deg{font-size:13px;font-weight:600;color:#fff;}
 .edu-sub{font-size:11px;color:var(--text-dim);}
 
+/* RIGHT COLUMN */
 .s1-right{display:flex;flex-direction:column;gap:12px;}
 
-/* ── PHOTO: SQUARE ── */
+/* Photo upload */
 .photo-frame{
-  width:100%;aspect-ratio:1/1;
+  width:100%;height:172px;
   border-radius:14px;
   border:2px dashed rgba(74,198,233,.35);
   background:rgba(74,198,233,.04);
@@ -165,13 +184,21 @@ body.edit-mode [contenteditable="true"]:focus{
 .photo-placeholder span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
 .photo-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;}
 
+/* Stats */
 .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.stat-box{background:var(--mist);border:1px solid var(--border);border-radius:12px;padding:14px 15px;position:relative;overflow:hidden;}
-.stat-box::after{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--navy),var(--blue));}
+.stat-box{
+  background:var(--mist);border:1px solid var(--border);border-radius:12px;
+  padding:14px 15px;position:relative;overflow:hidden;
+}
+.stat-box::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--navy),var(--blue));
+}
 .stat-n{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:700;line-height:1;color:#fff;}
 .stat-n em{font-style:normal;color:var(--blue);}
 .stat-l{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-top:3px;}
 
+/* Top 5 Expertise with stars */
 .expertise-panel{background:var(--mist);border:1px solid var(--border);border-radius:13px;padding:15px 17px;}
 .ep-head{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);font-weight:600;margin-bottom:11px;}
 .ep-list{display:flex;flex-direction:column;gap:8px;}
@@ -183,15 +210,23 @@ body.edit-mode [contenteditable="true"]:focus{
 .star:hover{transform:scale(1.25);}
 .ep-hint{font-size:10px;color:var(--text-dim);margin-top:9px;padding-top:9px;border-top:1px solid var(--border);letter-spacing:.04em;}
 
-/* ══════════════════════════════════════
+/* ════════════════════════════
    SLIDE 2 — EXPERIENCE
-══════════════════════════════════════ */
+════════════════════════════ */
 #s2{background:var(--navy);align-items:flex-start;}
 .s2-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;width:100%;max-width:1120px;}
+
 .tl{display:flex;flex-direction:column;gap:0;}
 .tl-item{display:flex;gap:14px;padding-bottom:22px;position:relative;}
-.tl-item:not(:last-child)::after{content:'';position:absolute;left:15px;top:32px;bottom:0;width:1px;background:linear-gradient(to bottom,rgba(74,198,233,.35),transparent);}
-.tl-dot{width:31px;height:31px;border-radius:50%;flex-shrink:0;border:1.5px solid var(--border);background:var(--navy2);display:flex;align-items:center;justify-content:center;margin-top:1px;}
+.tl-item:not(:last-child)::after{
+  content:'';position:absolute;left:15px;top:32px;bottom:0;
+  width:1px;background:linear-gradient(to bottom,rgba(74,198,233,.35),transparent);
+}
+.tl-dot{
+  width:31px;height:31px;border-radius:50%;flex-shrink:0;
+  border:1.5px solid var(--border);background:var(--navy2);
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
 .tl-dot.hi{border-color:var(--blue);background:rgba(74,198,233,.12);}
 .tl-dot svg{width:12px;height:12px;}
 .tl-role{font-size:13px;font-weight:600;color:#fff;}
@@ -201,13 +236,17 @@ body.edit-mode [contenteditable="true"]:focus{
 .tl-pts li{font-size:12px;color:var(--text-mid);line-height:1.55;padding-left:12px;position:relative;}
 .tl-pts li::before{content:'–';position:absolute;left:0;color:var(--blue);opacity:.6;}
 
-/* ══════════════════════════════════════
-   SLIDE 3 — CASE STUDIES
-══════════════════════════════════════ */
+/* ════════════════════════════
+   SLIDE 3 — CASE STUDIES + SKILLS
+════════════════════════════ */
 #s3{background:linear-gradient(150deg,#001f4d 0%,var(--navy) 100%);align-items:flex-start;justify-content:flex-start;padding-top:68px;}
 .s3-layout{width:100%;max-width:1120px;}
 .cases-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
-.case-card{background:var(--mist);border:1px solid var(--border);border-radius:16px;padding:22px 20px;position:relative;overflow:hidden;transition:transform .2s,border-color .2s;}
+.case-card{
+  background:var(--mist);border:1px solid var(--border);border-radius:16px;
+  padding:22px 20px;position:relative;overflow:hidden;
+  transition:transform .2s,border-color .2s;
+}
 .case-card:hover{transform:translateY(-4px);border-color:rgba(74,198,233,.45);}
 .case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cc,var(--blue));}
 .case-n{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;color:rgba(255,255,255,.04);position:absolute;top:12px;right:16px;line-height:1;}
@@ -220,95 +259,150 @@ body.edit-mode [contenteditable="true"]:focus{
 .cm-t{font-size:11px;color:rgba(255,255,255,.65);line-height:1.45;}
 .cm-t strong{color:#fff;}
 
-/* ══════════════════════════════════════
+.skills-strip{margin-top:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.sk-col{}
+.sk-head{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--blue);font-weight:600;margin-bottom:8px;}
+.sk-pills{display:flex;flex-direction:column;gap:5px;}
+.sk-pill{font-size:11px;color:var(--text-mid);padding:3px 0;border-bottom:1px solid rgba(74,198,233,.08);}
+
+/* ════════════════════════════
    SLIDE 4 — CERTS + SKILLS
-══════════════════════════════════════ */
+════════════════════════════ */
 #s4{background:var(--navy2);align-items:flex-start;}
 .s4-new-layout{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;margin-top:24px;width:100%;}
 .s4-col-head{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--blue);font-weight:600;margin-bottom:14px;}
-.cert-list{display:flex;flex-direction:column;gap:12px;}
-.cert-item{display:flex;align-items:flex-start;gap:16px;background:var(--mist);border:1px solid var(--border);border-radius:14px;padding:16px 18px;}
-.cert-icon{width:38px;height:38px;border-radius:10px;flex-shrink:0;background:linear-gradient(135deg,rgba(74,198,233,.25),rgba(74,198,233,.05));border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:17px;}
-.cert-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;}
-.cert-org{font-size:11px;color:var(--blue);margin-bottom:3px;}
-.cert-desc{font-size:11px;color:var(--text-dim);line-height:1.55;}
 
-.skill-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
-.stab{padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;background:rgba(74,198,233,.07);border:1px solid rgba(74,198,233,.18);color:rgba(255,255,255,.5);cursor:pointer;transition:all .2s;}
+/* Skill tabs */
+.skill-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.stab{
+  padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  background:rgba(74,198,233,.07);border:1px solid rgba(74,198,233,.18);color:rgba(255,255,255,.5);
+  cursor:pointer;transition:all .2s;
+}
 .stab:hover{background:rgba(74,198,233,.15);color:rgba(255,255,255,.8);}
 .stab.active{background:rgba(74,198,233,.22);border-color:rgba(74,198,233,.5);color:var(--blue);}
-.skill-panel{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;min-height:200px;}
-.sk-tag{display:flex;align-items:center;gap:8px;background:var(--mist);border:1px solid var(--border);border-radius:10px;padding:10px 14px;transition:border-color .2s,background .2s,transform .18s;}
+
+.skill-panel{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  min-height:210px;
+}
+.sk-tag{
+  display:flex;align-items:center;gap:8px;
+  background:var(--mist);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;cursor:default;
+  transition:border-color .2s,background .2s,transform .18s;
+  position:relative;overflow:hidden;
+}
 .sk-tag:hover{background:rgba(74,198,233,.15);border-color:rgba(74,198,233,.45);transform:translateY(-2px);}
 .sk-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;opacity:.7;}
 .sk-tag-name{font-size:12px;color:rgba(255,255,255,.78);font-weight:500;line-height:1.3;}
-.skill-cat-desc{margin-top:12px;padding:10px 14px;background:rgba(74,198,233,.05);border:1px solid rgba(74,198,233,.12);border-radius:10px;font-size:12px;color:var(--text-dim);line-height:1.6;min-height:44px;}
+
+.skill-cat-desc{
+  margin-top:12px;padding:10px 14px;
+  background:rgba(74,198,233,.05);border:1px solid rgba(74,198,233,.12);border-radius:10px;
+  font-size:12px;color:var(--text-dim);line-height:1.6;
+  min-height:44px;transition:opacity .2s;
+}
+
+/* Panel fade animation */
 @keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .skill-panel.animating{animation:panelIn .25s ease both;}
 
-/* ══════════════════════════════════════
-   SLIDE 5 — NEW ERA
-══════════════════════════════════════ */
+.cert-list{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.cert-item{
+  display:flex;align-items:flex-start;gap:16px;
+  background:var(--mist);border:1px solid var(--border);border-radius:14px;padding:18px 20px;
+}
+.cert-icon{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(74,198,233,.25),rgba(74,198,233,.05));
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.cert-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px;}
+.cert-org{font-size:11px;color:var(--blue);margin-bottom:4px;}
+.cert-desc{font-size:12px;color:var(--text-dim);line-height:1.55;}
+
+.acc-list{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.acc-item{
+  background:var(--mist);border:1px solid var(--border);border-radius:14px;padding:18px 20px;
+  position:relative;overflow:hidden;
+}
+.acc-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);}
+.acc-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:5px;}
+.acc-body{font-size:12px;color:var(--text-mid);line-height:1.6;}
+
+/* ════════════════════════════
+   SLIDE 5 — NEW ERA INFO
+════════════════════════════ */
 #s5{background:linear-gradient(140deg,#001838 0%,var(--navy) 100%);align-items:flex-start;}
 .s5-layout{display:grid;grid-template-columns:1fr 1fr;gap:52px;width:100%;max-width:1120px;}
+
 .s5-intro{font-size:14px;color:var(--text-mid);line-height:1.8;font-weight:300;margin-top:18px;}
 .s5-intro strong{color:#fff;font-weight:600;}
+
 .pillars{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
-.pillar{display:flex;align-items:flex-start;gap:14px;background:var(--mist);border:1px solid var(--border);border-radius:12px;padding:14px 18px;}
+.pillar{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--mist);border:1px solid var(--border);border-radius:12px;padding:14px 18px;
+}
 .p-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
 .p-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px;}
 .p-body{font-size:12px;color:var(--text-dim);line-height:1.55;}
-.liberty-panel{background:linear-gradient(145deg,rgba(74,198,233,.12),rgba(74,198,233,.03));border:1px solid rgba(74,198,233,.3);border-radius:18px;padding:30px 28px;}
+
+.liberty-panel{
+  background:linear-gradient(145deg,rgba(74,198,233,.12),rgba(74,198,233,.03));
+  border:1px solid rgba(74,198,233,.3);border-radius:18px;padding:30px 28px;
+}
 .lp-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:6px;}
 .lp-sub{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--blue);margin-bottom:22px;}
+
 .lp-stats{display:flex;flex-direction:column;gap:14px;}
 .lp-stat{display:flex;align-items:center;gap:16px;}
-.lp-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--blue);min-width:64px;line-height:1;}
+.lp-num{
+  font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--blue);
+  min-width:64px;line-height:1;
+}
 .lp-desc{font-size:13px;color:var(--text-mid);line-height:1.5;}
 .lp-divider{height:1px;background:var(--border);margin:14px 0;}
-.award-badge{display:flex;align-items:center;gap:12px;background:rgba(74,198,233,.08);border:1px solid rgba(74,198,233,.25);border-radius:10px;padding:12px 16px;margin-top:16px;}
+
+.award-badge{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(74,198,233,.08);border:1px solid rgba(74,198,233,.25);border-radius:10px;
+  padding:12px 16px;margin-top:16px;
+}
 .ab-icon{font-size:22px;}
 .ab-text{font-size:12px;color:#fff;font-weight:500;}
 .ab-sub{font-size:11px;color:var(--text-dim);}
 
-/* ══════════════════════════════════════
-   SLIDE 6 — CLOSING
-══════════════════════════════════════ */
-#s6{background:linear-gradient(135deg,#001838 0%,var(--navy) 60%);text-align:center;justify-content:center;align-items:center;}
-.closing-wrap{max-width:700px;position:relative;z-index:2;}
-.closing-name{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,7vw,92px);font-weight:700;line-height:.92;margin-bottom:10px;}
-.closing-name em{font-style:italic;color:var(--blue);}
-.closing-tagline{font-size:16px;color:var(--text-mid);line-height:1.75;margin:26px 0 36px;font-weight:300;}
-.closing-tagline strong{color:#fff;font-weight:600;}
-.contact-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
-.contact-chip{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-mid);background:var(--mist);border:1px solid var(--border);padding:9px 18px;border-radius:30px;}
+/* ════════════════════════════
+   SLIDE 6 — CLOSING (css above)
+════════════════════════════ */
 
-/* LinkedIn CTA — editable URL via data-href */
+/* ════════════════════════════
+   SLIDE 6 — CLOSING
+════════════════════════════ */
+#s6{background:linear-gradient(135deg,#001838 0%,var(--navy) 60%);text-align:center;justify-content:center;align-items:center;}
+.s7-wrap{max-width:700px;position:relative;z-index:2;}
+.s7-name{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,7vw,92px);font-weight:700;line-height:.92;margin-bottom:10px;}
+.s7-name em{font-style:italic;color:var(--blue);}
+.s7-tagline{font-size:16px;color:var(--text-mid);line-height:1.75;margin:26px 0 36px;font-weight:300;}
+.s7-tagline strong{color:#fff;font-weight:600;}
+.contact-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+.contact-chip{
+  display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-mid);
+  background:var(--mist);border:1px solid var(--border);padding:9px 18px;border-radius:30px;
+}
 .cta{
   display:inline-flex;align-items:center;gap:10px;
-  background:var(--blue);color:var(--navy2);
+  background:var(--blue);color:var(--navy);
   font-weight:700;font-size:13px;letter-spacing:.07em;text-transform:uppercase;
   padding:14px 34px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;
-  box-shadow:0 8px 28px rgba(74,198,233,.35);transition:transform .2s,box-shadow .2s;
+  box-shadow:0 8px 28px rgba(74,198,233,.35);
+  transition:transform .2s,box-shadow .2s;
 }
 .cta:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(74,198,233,.5);}
-
-/* LinkedIn URL editor (shows in edit mode) */
-.li-url-editor{
-  display:none;
-  margin-top:14px;
-  align-items:center;gap:8px;
-  background:rgba(74,198,233,.06);border:1px solid rgba(74,198,233,.25);
-  border-radius:30px;padding:8px 16px;
-}
-body.edit-mode .li-url-editor{display:flex;}
-.li-url-editor label{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--blue);white-space:nowrap;}
-#li-url-input{
-  background:transparent;border:none;outline:none;
-  font-size:12px;color:#fff;font-family:'Outfit',sans-serif;
-  flex:1;min-width:240px;
-}
-#li-url-input::placeholder{color:rgba(255,255,255,.3);}
+.sig{margin-top:36px;padding-top:28px;border-top:1px solid var(--border);font-size:11px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;}
 </style>
 </head>
 <body>
@@ -322,25 +416,6 @@ body.edit-mode .li-url-editor{display:flex;}
   <div id="counter">01 / 06</div>
 </div>
 
-<!-- EDIT TOOLBAR -->
-<div id="edit-toolbar">
-  <button class="etbtn" id="btn-edit">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-    Edit Slides
-  </button>
-  <button class="etbtn" id="btn-save">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-    Save
-  </button>
-  <button class="etbtn" id="btn-export">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-    Export HTML
-  </button>
-</div>
-
-<!-- Edit hint bar -->
-<div class="edit-hint" id="edit-hint">✏️ Click any text to edit — then Save or Export</div>
-
 <!-- DECK -->
 <div id="deck">
 
@@ -348,6 +423,7 @@ body.edit-mode .li-url-editor{display:flex;}
 <div class="slide active" id="s1">
   <div class="bg"><div class="bg-grid"></div><div class="bg-glow" style="width:600px;height:600px;top:-180px;right:-120px;"></div><div class="bg-corner"></div></div>
   <div class="s1-grid">
+    <!-- LEFT: name + summary + edu -->
     <div class="anim">
       <div class="s1-name">
         <span class="first">Jane</span>
@@ -356,7 +432,7 @@ body.edit-mode .li-url-editor{display:flex;}
       <div class="s1-role">Sr. Fullstack Developer · New Era Technology</div>
       <div class="s1-loc">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span id="loc-text">Cincinnati, OH</span>
+        Cincinnati, OH
       </div>
       <p class="s1-summary">Senior Developer with 15+ years of experience in enterprise application development using .NET technologies, JavaScript, Angular, and React. Expertise implementing CI/CD pipelines on Microsoft Azure and navigating regulated environments in Healthcare and Financial Services. Skilled mentor passionate about guiding junior developers.</p>
       <div class="edu-box">
@@ -368,8 +444,10 @@ body.edit-mode .li-url-editor{display:flex;}
       </div>
     </div>
 
+    <!-- RIGHT: photo + stats + starred expertise -->
     <div class="s1-right anim" style="animation-delay:.14s;">
-      <!-- SQUARE PHOTO -->
+
+      <!-- Photo upload -->
       <div class="photo-frame" id="photoFrame">
         <img id="candidatePhoto" alt="Candidate Photo">
         <div class="photo-placeholder">
@@ -381,18 +459,33 @@ body.edit-mode .li-url-editor{display:flex;}
 
       <!-- Stats -->
       <div class="stat-grid">
-        <div class="stat-box"><div class="stat-n">15<em>+</em></div><div class="stat-l">Years Experience</div></div>
-        <div class="stat-box"><div class="stat-n">10<em>+</em></div><div class="stat-l">Enterprise Clients</div></div>
-        <div class="stat-box"><div class="stat-n">3<em>×</em></div><div class="stat-l">New Era Engagements</div></div>
-        <div class="stat-box"><div class="stat-n">2</div><div class="stat-l">Industry Verticals</div></div>
+        <div class="stat-box">
+          <div class="stat-n">15<em>+</em></div>
+          <div class="stat-l">Years Experience</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n">10<em>+</em></div>
+          <div class="stat-l">Enterprise Clients</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n">3<em>×</em></div>
+          <div class="stat-l">New Era Engagements</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n">2</div>
+          <div class="stat-l">Industry Verticals</div>
+        </div>
       </div>
 
-      <!-- Stars -->
+      <!-- Top 5 Expertise with clickable stars -->
       <div class="expertise-panel">
         <div class="ep-head">Top Areas of Expertise</div>
-        <div class="ep-list" id="expertiseList"></div>
+        <div class="ep-list" id="expertiseList">
+          <!-- JS renders these -->
+        </div>
         <div class="ep-hint">★ Click stars to tailor ratings to the job description</div>
       </div>
+
     </div>
   </div>
 </div>
@@ -403,6 +496,8 @@ body.edit-mode .li-url-editor{display:flex;}
   <div style="width:100%;max-width:1120px;">
     <div class="anim"><div class="eyebrow">Career Timeline</div><h2 class="h2">15 Years of <em>Enterprise Delivery</em></h2></div>
     <div class="s2-layout anim" style="margin-top:26px;">
+
+      <!-- LEFT COLUMN -->
       <div class="tl">
         <div class="tl-item">
           <div class="tl-dot hi"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="#4ac6e9"/></svg></div>
@@ -410,7 +505,7 @@ body.edit-mode .li-url-editor{display:flex;}
             <div class="tl-role">Senior Developer</div>
             <div class="tl-org">New Era Technology | Total Quality Logistics</div>
             <div class="tl-dur">5 Months</div>
-            <ul class="tl-pts"><li>Modernized legacy WinForms app into React web app + ASP.NET Core Web API</li><li>Built frontend using React with extended base component library</li><li>Implemented Entity Framework ORM; drove standards &amp; best practices</li></ul>
+            <ul class="tl-pts"><li>Modernized legacy WinForms app into React web app + ASP.NET Core Web API</li><li>Built frontend using React with extended base component library</li><li>Implemented Entity Framework ORM; drove standards & best practices</li></ul>
           </div>
         </div>
         <div class="tl-item">
@@ -441,6 +536,8 @@ body.edit-mode .li-url-editor{display:flex;}
           </div>
         </div>
       </div>
+
+      <!-- RIGHT COLUMN -->
       <div class="tl">
         <div class="tl-item">
           <div class="tl-dot"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="rgba(74,198,233,.4)"/></svg></div>
@@ -483,7 +580,7 @@ body.edit-mode .li-url-editor{display:flex;}
   </div>
 </div>
 
-<!-- ══ S3 — CASE STUDIES ══ -->
+<!-- ══ S3 — CASE STUDIES + SKILLS ══ -->
 <div class="slide" id="s3">
   <div class="bg"><div class="bg-grid"></div></div>
   <div class="s3-layout">
@@ -526,22 +623,54 @@ body.edit-mode .li-url-editor{display:flex;}
   </div>
 </div>
 
-<!-- ══ S4 — CERTS + SKILLS ══ -->
+<!-- ══ S4 — CERTS & TECHNICAL SKILLS ══ -->
 <div class="slide" id="s4">
   <div class="bg"><div class="bg-grid"></div><div class="bg-glow" style="width:500px;height:500px;top:-140px;right:-100px;"></div></div>
   <div style="width:100%;max-width:1160px;">
     <div class="anim"><div class="eyebrow">Credentials &amp; Capabilities</div><h2 class="h2">Certifications &amp; <em>Technical Skills</em></h2></div>
     <div class="s4-new-layout anim">
-      <div>
+
+      <!-- LEFT: Certs -->
+      <div class="s4-certs">
         <div class="s4-col-head">Certifications</div>
         <div class="cert-list">
-          <div class="cert-item"><div class="cert-icon">☁️</div><div><div class="cert-title">Microsoft Certified: Azure Developer Associate</div><div class="cert-org">Microsoft · AZ-204</div><div class="cert-desc">Designing, building, testing, and maintaining cloud applications on Azure.</div></div></div>
-          <div class="cert-item"><div class="cert-icon">🔐</div><div><div class="cert-title">Microsoft Identity Platform &amp; Azure AD B2C</div><div class="cert-org">Microsoft Learn · Practical Certification</div><div class="cert-desc">Identity experience frameworks, custom policies, enterprise auth flows.</div></div></div>
-          <div class="cert-item"><div class="cert-icon">🅰️</div><div><div class="cert-title">Angular Advanced Development</div><div class="cert-org">Udemy / Internal Certification</div><div class="cert-desc">NgRx, Angular Material, performance optimization, and testing.</div></div></div>
-          <div class="cert-item"><div class="cert-icon">📐</div><div><div class="cert-title">CQRS &amp; Clean Architecture Practitioner</div><div class="cert-org">Enterprise Patterns Training</div><div class="cert-desc">Applied across production shipment management APIs.</div></div></div>
+          <div class="cert-item">
+            <div class="cert-icon">☁️</div>
+            <div>
+              <div class="cert-title">Microsoft Certified: Azure Developer Associate</div>
+              <div class="cert-org">Microsoft · AZ-204</div>
+              <div class="cert-desc">Designing, building, testing, and maintaining cloud applications on Azure.</div>
+            </div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">🔐</div>
+            <div>
+              <div class="cert-title">Microsoft Identity Platform &amp; Azure AD B2C</div>
+              <div class="cert-org">Microsoft Learn · Practical Certification</div>
+              <div class="cert-desc">Identity experience frameworks, custom policies, enterprise authentication flows.</div>
+            </div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">🅰️</div>
+            <div>
+              <div class="cert-title">Angular Advanced Development</div>
+              <div class="cert-org">Udemy / Internal Certification</div>
+              <div class="cert-desc">NgRx, Angular Material, performance optimization, and testing.</div>
+            </div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">📐</div>
+            <div>
+              <div class="cert-title">CQRS &amp; Clean Architecture Practitioner</div>
+              <div class="cert-org">Enterprise Patterns Training</div>
+              <div class="cert-desc">Applied across production shipment management APIs.</div>
+            </div>
+          </div>
         </div>
       </div>
-      <div>
+
+      <!-- RIGHT: Interactive Skills -->
+      <div class="s4-skills">
         <div class="s4-col-head">Technical Skills</div>
         <div class="skill-tabs">
           <button class="stab active" data-cat="languages">Languages</button>
@@ -550,9 +679,12 @@ body.edit-mode .li-url-editor{display:flex;}
           <button class="stab" data-cat="databases">Databases &amp; Tools</button>
           <button class="stab" data-cat="protocols">Protocols</button>
         </div>
-        <div class="skill-panel" id="skillPanel"></div>
+        <div class="skill-panel" id="skillPanel">
+          <!-- JS populates -->
+        </div>
         <div class="skill-cat-desc" id="skillCatDesc"></div>
       </div>
+
     </div>
   </div>
 </div>
@@ -586,7 +718,10 @@ body.edit-mode .li-url-editor{display:flex;}
         </div>
         <div class="award-badge">
           <div class="ab-icon">🏆</div>
-          <div><div class="ab-text">Distinguished Service Award</div><div class="ab-sub">Awarded by Liberty Mutual · 2017</div></div>
+          <div>
+            <div class="ab-text">Distinguished Service Award</div>
+            <div class="ab-sub">Awarded by Liberty Mutual · 2017</div>
+          </div>
         </div>
       </div>
     </div>
@@ -596,35 +731,32 @@ body.edit-mode .li-url-editor{display:flex;}
 <!-- ══ S6 — CLOSING ══ -->
 <div class="slide" id="s6">
   <div class="bg"><div class="bg-grid" style="opacity:.4;"></div><div class="bg-glow" style="width:800px;height:800px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.1;"></div></div>
-  <div class="closing-wrap">
+  <div class="s7-wrap">
     <div class="anim"><div class="eyebrow" style="justify-content:center;">Thank You</div></div>
-    <div class="closing-name anim">Let's Build<br><em>Something Great</em></div>
-    <p class="closing-tagline anim">
+    <div class="s7-name anim">
+      Let's Build<br><em>Something Great</em>
+    </div>
+    <p class="s7-tagline anim">
       I bring <strong>15+ years of enterprise fullstack expertise</strong>, a proven record of delivering for New Era clients, and the mindset of a senior developer who leads as well as she codes. I'm ready to make an immediate impact at Liberty Mutual.
     </p>
-    <!-- Contact chips — LinkedIn chip removed -->
     <div class="contact-row anim">
       <div class="contact-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn Profile
+      </div>
+      <div class="contact-chip">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-        <span id="chip-location">Cincinnati, OH</span>
+        Cincinnati, OH
       </div>
       <div class="contact-chip">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span id="chip-availability">Available Immediately</span>
+        Available Immediately
       </div>
     </div>
-
-    <!-- LinkedIn CTA — URL editable in-place via data attribute & input -->
-    <a id="li-cta" class="cta anim" href="https://www.linkedin.com/in/" target="_blank" rel="noopener">
+    <a href="https://www.linkedin.com/in/" target="_blank" class="cta anim">
       View My LinkedIn
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
     </a>
-
-    <!-- URL input only visible in edit mode -->
-    <div class="li-url-editor">
-      <label>LinkedIn URL:</label>
-      <input type="url" id="li-url-input" placeholder="https://www.linkedin.com/in/your-profile">
-    </div>
   </div>
 </div>
 
@@ -643,7 +775,6 @@ body.edit-mode .li-url-editor{display:flex;}
 </nav>
 
 <script>
-// ══ NAVIGATION ══
 const slides=[...document.querySelectorAll('.slide')];
 const dots=[...document.querySelectorAll('.ndot')];
 const counter=document.getElementById('counter');
@@ -655,7 +786,7 @@ function goTo(n){
   slides[cur].classList.remove('active');
   slides[cur].classList.add('out-left');
   const prev=cur;
-  setTimeout(()=>slides[prev].classList.remove('out-left'),600);
+  setTimeout(()=>{slides[prev].classList.remove('out-left');},600);
   dots[cur].classList.remove('active');
   cur=n;
   slides[cur].classList.add('active');
@@ -663,29 +794,91 @@ function goTo(n){
   counter.textContent=String(cur+1).padStart(2,'0')+' / 06';
   setTimeout(()=>locked=false,650);
 }
+
 function go(d){goTo((cur+d+slides.length)%slides.length);}
+
 document.addEventListener('keydown',e=>{
   if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1);
   if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
 });
+
 let sx=0;
 document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
-document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>50)go(dx<0?1:-1);});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-sx;
+  if(Math.abs(dx)>50)go(dx<0?1:-1);
+});
 
-// ══ PHOTO UPLOAD ══
-document.getElementById('photoInput').addEventListener('change',function(e){
-  const file=e.target.files[0]; if(!file)return;
+// ── PHOTO UPLOAD ──
+const photoInput=document.getElementById('photoInput');
+const candidatePhoto=document.getElementById('candidatePhoto');
+const photoPlaceholder=document.querySelector('.photo-placeholder');
+photoInput.addEventListener('change',e=>{
+  const file=e.target.files[0];
+  if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{
-    const img=document.getElementById('candidatePhoto');
-    img.src=ev.target.result;
-    img.classList.add('loaded');
-    document.querySelector('.photo-placeholder').style.display='none';
+    candidatePhoto.src=ev.target.result;
+    candidatePhoto.classList.add('loaded');
+    photoPlaceholder.style.display='none';
   };
   reader.readAsDataURL(file);
 });
 
-// ══ STAR RATINGS ══
+// ── INTERACTIVE SKILL TABS ──
+const skillData = {
+  languages: {
+    desc: 'Core programming languages used across enterprise fullstack projects.',
+    items: ['C#','TypeScript','JavaScript','SQL','HTML / CSS','PowerShell','Bash']
+  },
+  frameworks: {
+    desc: 'Frameworks and libraries powering frontend and backend delivery.',
+    items: ['.NET Core','.NET Framework','Angular','React','Entity Framework','NgRx','Angular Material']
+  },
+  cloud: {
+    desc: 'Azure-centric cloud expertise including identity, DevOps, and API management.',
+    items: ['Microsoft Azure','Azure AD B2C','Azure DevOps','Azure APIM','Azure Front Door','OAuth 2.0','CI / CD']
+  },
+  databases: {
+    desc: 'Data persistence, integration pipelines, and development tooling.',
+    items: ['SQL Server','MongoDB','SSIS','Git / TFS','Visual Studio','VS Code','Postman','Fiddler']
+  },
+  protocols: {
+    desc: 'API design patterns and communication protocols across distributed systems.',
+    items: ['REST','GraphQL','SOAP','CQRS','Agile / Scrum','Clean Architecture']
+  }
+};
+
+const skillPanel = document.getElementById('skillPanel');
+const skillCatDesc = document.getElementById('skillCatDesc');
+const tabs = document.querySelectorAll('.stab');
+
+function renderSkills(cat) {
+  const data = skillData[cat];
+  skillCatDesc.textContent = data.desc;
+  skillPanel.classList.remove('animating');
+  void skillPanel.offsetWidth; // reflow
+  skillPanel.classList.add('animating');
+  skillPanel.innerHTML = data.items.map(item => `
+    <div class="sk-tag">
+      <div class="sk-tag-dot"></div>
+      <span class="sk-tag-name">${item}</span>
+    </div>
+  `).join('');
+}
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderSkills(tab.dataset.cat);
+  });
+});
+
+// Init
+renderSkills('languages');
+
+// ── STAR RATINGS ──
 const expertise=[
   {label:'C# / .NET Core', stars:5},
   {label:'Angular & React', stars:5},
@@ -693,188 +886,257 @@ const expertise=[
   {label:'Enterprise APIs', stars:5},
   {label:'Azure AD B2C',   stars:4},
 ];
-const epList=document.getElementById('expertiseList');
+const list=document.getElementById('expertiseList');
 expertise.forEach((item,i)=>{
-  const row=document.createElement('div'); row.className='ep-item';
-  const lbl=document.createElement('span'); lbl.className='ep-label'; lbl.textContent=item.label;
-  const starsEl=document.createElement('div'); starsEl.className='ep-stars';
+  const row=document.createElement('div');
+  row.className='ep-item';
+  const lbl=document.createElement('span');
+  lbl.className='ep-label';
+  lbl.textContent=item.label;
+  const stars=document.createElement('div');
+  stars.className='ep-stars';
   for(let s=1;s<=5;s++){
     const star=document.createElement('span');
     star.className='star'+(s<=item.stars?' on':'');
-    star.textContent='★'; star.dataset.idx=i; star.dataset.val=s;
-    star.onclick=()=>{expertise[i].stars=s;renderStars(i,s);};
-    star.onmouseover=()=>previewStars(i,s);
-    star.onmouseleave=()=>renderStars(i,expertise[i].stars);
-    starsEl.appendChild(star);
+    star.textContent='★';
+    star.dataset.idx=i;
+    star.dataset.val=s;
+    star.addEventListener('click',function(){
+      const val=parseInt(this.dataset.val);
+      const idx=parseInt(this.dataset.idx);
+      expertise[idx].stars=val;
+      renderStars(idx,val);
+    });
+    star.addEventListener('mouseover',function(){
+      const val=parseInt(this.dataset.val);
+      const idx=parseInt(this.dataset.idx);
+      previewStars(idx,val);
+    });
+    star.addEventListener('mouseleave',function(){
+      const idx=parseInt(this.dataset.idx);
+      renderStars(idx,expertise[idx].stars);
+    });
+    stars.appendChild(star);
   }
-  row.appendChild(lbl); row.appendChild(starsEl); epList.appendChild(row);
+  row.appendChild(lbl);
+  row.appendChild(stars);
+  list.appendChild(row);
 });
+
 function renderStars(idx,val){
-  epList.querySelectorAll('.ep-item')[idx].querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<val));
+  const rows=list.querySelectorAll('.ep-item');
+  const stars=rows[idx].querySelectorAll('.star');
+  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
 }
+
 function previewStars(idx,val){
-  epList.querySelectorAll('.ep-item')[idx].querySelectorAll('.star').forEach((s,i)=>s.classList.toggle('on',i<val));
+  const rows=list.querySelectorAll('.ep-item');
+  const stars=rows[idx].querySelectorAll('.star');
+  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
 }
+<!-- ✅ MAIN DECK SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
 
-// ══ SKILL TABS ══
-const skillData={
-  languages:{desc:'Core programming languages used across enterprise fullstack projects.',items:['C#','TypeScript','JavaScript','SQL','HTML / CSS','PowerShell','Bash']},
-  frameworks:{desc:'Frameworks and libraries powering frontend and backend delivery.',items:['.NET Core','.NET Framework','Angular','React','Entity Framework','NgRx','Angular Material']},
-  cloud:{desc:'Azure-centric cloud expertise including identity, DevOps, and API management.',items:['Microsoft Azure','Azure AD B2C','Azure DevOps','Azure APIM','Azure Front Door','OAuth 2.0','CI / CD']},
-  databases:{desc:'Data persistence, integration pipelines, and development tooling.',items:['SQL Server','MongoDB','SSIS','Git / TFS','Visual Studio','VS Code','Postman','Fiddler']},
-  protocols:{desc:'API design patterns and communication protocols across distributed systems.',items:['REST','GraphQL','SOAP','CQRS','Agile / Scrum','Clean Architecture']}
-};
-const skillPanel=document.getElementById('skillPanel');
-const skillCatDesc=document.getElementById('skillCatDesc');
-document.querySelectorAll('.stab').forEach(tab=>{
-  tab.addEventListener('click',()=>{
-    document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
-    tab.classList.add('active');
-    renderSkills(tab.dataset.cat);
-  });
-});
-function renderSkills(cat){
-  const d=skillData[cat];
-  skillCatDesc.textContent=d.desc;
-  skillPanel.classList.remove('animating');
-  void skillPanel.offsetWidth;
-  skillPanel.classList.add('animating');
-  skillPanel.innerHTML=d.items.map(it=>`<div class="sk-tag"><div class="sk-tag-dot"></div><span class="sk-tag-name">${it}</span></div>`).join('');
-}
-renderSkills('languages');
+  // ── NAVIGATION ──
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=[...document.querySelectorAll('.ndot')];
+  const counter=document.getElementById('counter');
 
-// ══ LINKEDIN URL EDITOR ══
-const liCta=document.getElementById('li-cta');
-const liInput=document.getElementById('li-url-input');
-// Pre-fill input with current href
-liInput.value=liCta.href;
-liInput.addEventListener('input',()=>{
-  if(liInput.value.trim()) liCta.href=liInput.value.trim();
-});
+  let cur=0,locked=false;
 
-// ══ EDIT / SAVE / EXPORT ══
-const EDITABLE_SEL=[
-  '.s1-name .first','.s1-name .last','.s1-role','#loc-text','.s1-summary',
-  '.edu-deg','.edu-sub',
-  '.stat-n','.stat-l',
-  '.tl-role','.tl-org','.tl-dur','.tl-pts li',
-  '.case-client','.case-title','.case-body','.cm-t',
-  '.cert-title','.cert-org','.cert-desc',
-  '.p-title','.p-body',
-  '.lp-title','.lp-desc','.ab-text','.ab-sub',
-  '.closing-name','.closing-tagline',
-  '#chip-location','#chip-availability'
-].join(',');
+  window.goTo=function(n){
+    if(n===cur||locked)return;
+    locked=true;
 
-let editMode=false;
-const btnEdit=document.getElementById('btn-edit');
-const btnSave=document.getElementById('btn-save');
-const btnExport=document.getElementById('btn-export');
-const editHint=document.getElementById('edit-hint');
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('out-left');
 
-btnEdit.addEventListener('click',()=>{
-  editMode=!editMode;
-  document.body.classList.toggle('edit-mode',editMode);
-  btnEdit.classList.toggle('active',editMode);
-  btnEdit.innerHTML=editMode
-    ? `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Done Editing`
-    : `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edit Slides`;
-  // Toggle contenteditable on all editable elements
-  document.querySelectorAll(EDITABLE_SEL).forEach(el=>{
-    el.contentEditable=editMode ? 'true' : 'false';
-  });
-  editHint.classList.toggle('show',editMode);
-});
+    const prev=cur;
+    setTimeout(()=>slides[prev].classList.remove('out-left'),600);
 
-btnSave.addEventListener('click',()=>{
-  // Save all text content + LinkedIn URL to localStorage
-  const data={};
-  document.querySelectorAll(EDITABLE_SEL).forEach((el,i)=>{
-    data['el_'+i]=el.innerHTML;
-  });
-  data.linkedinUrl=liCta.href;
-  // Save photo if uploaded
-  const photoSrc=document.getElementById('candidatePhoto').src;
-  if(photoSrc && !photoSrc.startsWith('data:')) data.photo=null;
-  else if(photoSrc) data.photo=photoSrc;
-  localStorage.setItem('ne_deck',JSON.stringify(data));
-  // Visual feedback
-  btnSave.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Saved!`;
-  setTimeout(()=>{
-    btnSave.innerHTML=`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg> Save`;
-  },2000);
-});
+    dots[cur].classList.remove('active');
+    cur=n;
 
-btnExport.addEventListener('click',()=>{
-  // Turn off edit mode first
-  if(editMode){
-    editMode=false;
-    document.body.classList.remove('edit-mode');
-    btnEdit.classList.remove('active');
-    document.querySelectorAll(EDITABLE_SEL).forEach(el=>{el.contentEditable='false';});
-    editHint.classList.remove('show');
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+    counter.textContent=String(cur+1).padStart(2,'0')+' / 06';
+
+    setTimeout(()=>locked=false,650);
   }
-  // Build clean export: clone full document
-  const clone=document.documentElement.cloneNode(true);
-  // Remove toolbar from export
-  const tb=clone.querySelector('#edit-toolbar');
-  if(tb)tb.remove();
-  const hint=clone.querySelector('.edit-hint');
-  if(hint)hint.remove();
-  // Remove contenteditable attributes
-  clone.querySelectorAll('[contenteditable]').forEach(el=>{
-    el.removeAttribute('contenteditable');
-    el.style.outline='none';
-    el.style.background='';
-  });
-  // Remove edit mode class
-  clone.querySelector('body').classList.remove('edit-mode');
-  // Embed candidate photo as base64 if present
-  const photoEl=document.getElementById('candidatePhoto');
-  if(photoEl.src && photoEl.src.startsWith('data:')){
-    const clonePhoto=clone.querySelector('#candidatePhoto');
-    if(clonePhoto){clonePhoto.src=photoEl.src;clonePhoto.classList.add('loaded');}
-    const clonePlaceholder=clone.querySelector('.photo-placeholder');
-    if(clonePlaceholder)clonePlaceholder.style.display='none';
-  }
-  const html='<!DOCTYPE html>\n'+clone.outerHTML;
-  const blob=new Blob([html],{type:'text/html'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  // Use candidate name from slide 1 for filename
-  const first=(document.querySelector('.s1-name .first')||{}).textContent||'candidate';
-  const last=(document.querySelector('.s1-name .last')||{}).textContent||'deck';
-  a.download=(first.trim()+'_'+last.trim()+'_NewEra.html').toLowerCase().replace(/\s+/g,'_');
-  a.click();
-  URL.revokeObjectURL(url);
-});
 
-// ══ LOAD SAVED DATA ON START ══
-(function loadSaved(){
-  const saved=localStorage.getItem('ne_deck');
-  if(!saved)return;
-  try{
-    const data=JSON.parse(saved);
-    const els=[...document.querySelectorAll(EDITABLE_SEL)];
-    els.forEach((el,i)=>{if(data['el_'+i]!==undefined)el.innerHTML=data['el_'+i];});
-    if(data.linkedinUrl){
-      liCta.href=data.linkedinUrl;
-      liInput.value=data.linkedinUrl;
-    }
-    if(data.photo){
-      const img=document.getElementById('candidatePhoto');
-      img.src=data.photo;
+  window.go=function(d){
+    goTo((cur+d+slides.length)%slides.length);
+  }
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight')go(1);
+    if(e.key==='ArrowLeft')go(-1);
+  });
+
+  // ── PHOTO UPLOAD ──
+  const input=document.getElementById('photoInput');
+  const img=document.getElementById('candidatePhoto');
+  const placeholder=document.querySelector('.photo-placeholder');
+
+  input.addEventListener('change',e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      img.src=ev.target.result;
       img.classList.add('loaded');
-      document.querySelector('.photo-placeholder').style.display='none';
+      placeholder.style.display='none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── STAR RATINGS ──
+  const expertise=[
+    {label:'C# / .NET Core',stars:5},
+    {label:'Angular & React',stars:5},
+    {label:'Microsoft Azure',stars:4},
+    {label:'Enterprise APIs',stars:5},
+    {label:'Azure AD B2C',stars:4},
+  ];
+
+  const list=document.getElementById('expertiseList');
+
+  expertise.forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='ep-item';
+
+    const lbl=document.createElement('span');
+    lbl.className='ep-label';
+    lbl.textContent=item.label;
+
+    const stars=document.createElement('div');
+    stars.className='ep-stars';
+
+    for(let s=1;s<=5;s++){
+      const star=document.createElement('span');
+      star.className='star'+(s<=item.stars?' on':'');
+      star.textContent='★';
+
+      star.onclick=()=>{
+        expertise[i].stars=s;
+        renderStars(i,s);
+      };
+
+      star.onmouseover=()=>previewStars(i,s);
+      star.onmouseleave=()=>renderStars(i,expertise[i].stars);
+
+      stars.appendChild(star);
     }
-  }catch(e){console.warn('Could not load saved deck',e);}
-})();
+
+    row.appendChild(lbl);
+    row.appendChild(stars);
+    list.appendChild(row);
+  });
+
+  function renderStars(idx,val){
+    const stars=list.querySelectorAll('.ep-item')[idx].querySelectorAll('.star');
+    stars.forEach((s,i)=>s.classList.toggle('on',i<val));
+  }
+
+  function previewStars(idx,val){
+    const stars=list.querySelectorAll('.ep-item')[idx].querySelectorAll('.star');
+    stars.forEach((s,i)=>s.classList.toggle('on',i<val));
+  }
+
+});
+</script>
+
+
+<!-- ✅ EDIT / SAVE / EXPORT -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  let editMode=false;
+
+  const editable=`
+    .s1-name, .s1-role, .s1-summary,
+    .edu-deg, .edu-sub,
+    .stat-n, .stat-l,
+    .tl-role, .tl-org, .tl-dur, .tl-pts li,
+    .case-title, .case-body, .cm-t,
+    .cert-title, .cert-desc,
+    .p-title, .p-body,
+    .lp-title, .lp-desc,
+    .s7-tagline
+  `;
+
+  function toggleEdit(){
+    editMode=!editMode;
+
+    document.querySelectorAll(editable).forEach(el=>{
+      el.contentEditable=editMode;
+      el.style.outline=editMode ? "2px dashed #4ac6e9" : "none";
+    });
+  }
+
+  function save(){
+    const data=[...document.querySelectorAll(editable)].map(el=>el.innerHTML);
+    localStorage.setItem("deck",JSON.stringify(data));
+    alert("✅ Saved");
+  }
+
+  function load(){
+    const saved=JSON.parse(localStorage.getItem("deck"));
+    if(!saved)return;
+
+    document.querySelectorAll(editable).forEach((el,i)=>{
+      if(saved[i]) el.innerHTML=saved[i];
+    });
+  }
+
+  function exportHTML(){
+    const deck=document.getElementById("deck").cloneNode(true);
+
+    deck.querySelectorAll("[contenteditable]").forEach(el=>{
+      el.removeAttribute("contenteditable");
+      el.style.outline="none";
+    });
+
+    const html=`<!DOCTYPE html>
+<html>
+<head>${document.head.innerHTML}</head>
+<body>${deck.outerHTML}</body>
+</html>`;
+
+    const blob=new Blob([html],{type:"text/html"});
+    const link=document.createElement("a");
+    link.href=URL.createObjectURL(blob);
+    link.download="candidate.html";
+    link.click();
+  }
+
+  function btn(txt,top,fn){
+    const b=document.createElement("button");
+
+    b.innerText=txt;
+    b.style.position="fixed";
+    b.style.top=top;
+    b.style.right="20px";
+    b.style.zIndex="9999";
+    b.style.padding="10px";
+    b.style.background="#4ac6e9";
+    b.style.border="none";
+    b.style.borderRadius="20px";
+    b.style.cursor="pointer";
+
+    b.onclick=fn;
+    document.body.appendChild(b);
+  }
+
+  btn("Edit", "20px", toggleEdit);
+  btn("Save", "70px", save);
+  btn("Export", "120px", exportHTML);
+
+  load();
+
+});
 </script>
 </body>
 </html>
-HTMLEOF
-echo "Done"
-Output
-
-Done
