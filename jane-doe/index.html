@@ -1137,6 +1137,19 @@ document.addEventListener("DOMContentLoaded", function() {
   load();
 
 });
+</script><!-- ✅ AUTO-FILL UI -->
+<textarea id="resumeInput" placeholder="Paste resume here..." 
+style="position:fixed; bottom:20px; left:20px; width:300px; height:120px; z-index:9999;"></textarea>
+
+<button onclick="autoFillResume()" 
+style="position:fixed; bottom:150px; left:20px; z-index:9999; padding:10px;">
+Auto Fill Resume
+</button>
+
+<!-- ✅ Your existing scripts come AFTER this -->
+<script>
+...
 </script>
+
 </body>
 </html>
