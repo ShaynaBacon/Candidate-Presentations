@@ -976,26 +976,38 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function exportHTML() {
 
-    const clone = document.documentElement.cloneNode(true);
+  // ✅ ONLY clone the deck (NOT the whole page)
+  const deck = document.getElementById("deck");
+  const cleanDeck = deck.cloneNode(true);
 
-    // ✅ remove ALL edit buttons
-    clone.querySelectorAll(".edit-ui").forEach(el => el.remove());
+  // ✅ Remove edit artifacts
+  cleanDeck.querySelectorAll("[contenteditable]").forEach(el => {
+    el.removeAttribute("contenteditable");
+    el.style.outline = "none";
+  });
 
-    // ✅ remove edit mode artifacts
-    clone.querySelectorAll("[contenteditable]").forEach(el => {
-      el.removeAttribute("contenteditable");
-      el.style.outline = "none";
-    });
+  // ✅ Build clean HTML manually (this is the fix)
+  const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Candidate Presentation</title>
+${document.head.innerHTML}
+</head>
+<body>
+${cleanDeck.outerHTML}
+</body>
+</html>
+`;
 
-    const html = "<!DOCTYPE html>\n" + clone.outerHTML;
+  const blob = new Blob([html], { type: "text/html" });
+  const link = document.createElement("a");
 
-    const blob = new Blob([html], { type: "text/html" });
-    const link = document.createElement("a");
-
-    link.href = URL.createObjectURL(blob);
-    link.download = "candidate_clean.html";
-    link.click();
-  }
+  link.href = URL.createObjectURL(blob);
+  link.download = "candidate_clean.html";
+  link.click();
+}
 
   function createButton(text, top, action) {
     const btn = document.createElement("button");
