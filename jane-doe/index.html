@@ -933,6 +933,114 @@ function previewStars(idx,val){
   const stars=rows[idx].querySelectorAll('.star');
   stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
 }
+const editableSelectors = `
+.s1-name, .s1-role, .s1-summary,
+.edu-deg, .edu-sub,
+.stat-n, .stat-l,
+.tl-role, .tl-org, .tl-dur, .tl-pts li,
+.case-title, .case-body, .cm-t,
+.cert-title, .cert-desc,
+.p-title, .p-body,
+.lp-title, .lp-desc,
+.s7-tagline
+`;
+``
 </script>
+
+<script>
+window.addEventListener("DOMContentLoaded", () => {
+
+  let editMode = false;
+
+  function toggleEditMode() {
+    editMode = !editMode;
+
+    document.querySelectorAll(document.querySelectorAll(editableSelectors)).forEach(el => {
+      el.contentEditable = editMode;
+      el.style.outline = editMode ? "2px dashed #4ac6e9" : "none";
+    });
+  }
+
+  function saveEdits() {
+    const data = [];
+
+    document.querySelectorAll(editableSelectors).forEach(el => {
+      data.push(el.innerHTML);
+    });
+
+    localStorage.setItem("candidateDeck", JSON.stringify(data));
+    alert("✅ Changes saved");
+  }
+
+  function loadEdits() {
+    const saved = JSON.parse(localStorage.getItem("candidateDeck"));
+    if (!saved) return;
+
+    document.querySelectorAll(editableSelectors).forEach((el, i) => {
+      if (saved[i]) el.innerHTML = saved[i];
+    });
+  }
+
+  function exportHTML() {
+
+    // ✅ Clone page (safe, does not affect your working version)
+    const clonedDoc = document.documentElement.cloneNode(true);
+
+    // ✅ Remove buttons from cloned file
+    const buttons = clonedDoc.querySelectorAll(".export-hide");
+    buttons.forEach(btn => btn.remove());
+
+    // ✅ Remove edit attributes
+    const editable = clonedDoc.querySelectorAll("[contenteditable]");
+    editable.forEach(el => el.removeAttribute("contenteditable"));
+
+    // ✅ Remove outlines
+    const outlined = clonedDoc.querySelectorAll("*");
+    outlined.forEach(el => el.style.outline = "none");
+
+    const cleanHTML = "<!DOCTYPE html>\n" + clonedDoc.outerHTML;
+
+    const blob = new Blob([cleanHTML], { type: "text/html" });
+    const link = document.createElement("a");
+
+    link.href = URL.createObjectURL(blob);
+    link.download = "candidate_presentation_clean.html";
+    link.click();
+  }
+
+  function createButton(text, top, action) {
+    const btn = document.createElement("button");
+
+    btn.innerText = text;
+    btn.classList.add("export-hide"); // ✅ critical for export cleanup
+
+    btn.style.position = "fixed";
+    btn.style.top = top;
+    btn.style.right = "20px";
+    btn.style.zIndex = "9999";
+    btn.style.padding = "10px 14px";
+    btn.style.background = "#4ac6e9";
+    btn.style.color = "#002d6a";
+    btn.style.border = "none";
+    btn.style.borderRadius = "20px";
+    btn.style.cursor = "pointer";
+    btn.style.fontWeight = "600";
+
+    btn.onclick = action;
+
+    document.body.appendChild(btn);
+  }
+
+  // ✅ Create buttons
+  createButton("Edit Mode", "20px", toggleEditMode);
+  createButton("Save", "70px", saveEdits);
+  createButton("Export File", "120px", exportHTML);
+
+  // ✅ Load previous edits
+  loadEdits();
+
+});
+</script>
+  
 </body>
 </html>
