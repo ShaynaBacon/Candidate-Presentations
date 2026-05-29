@@ -927,9 +927,155 @@ function renderStars(idx,val){
   const rows=list.querySelectorAll('.ep-item');
   const stars=rows[idx].querySelectorAll('.star');
   stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
-}<script>
-try {
+}
 
+function previewStars(idx,val){
+  const rows=list.querySelectorAll('.ep-item');
+  const stars=rows[idx].querySelectorAll('.star');
+  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
+}
+</script>
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
+});
+
+let sx=0;
+document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-sx;
+  if(Math.abs(dx)>50)go(dx<0?1:-1);
+});
+
+// ── PHOTO UPLOAD ──
+const photoInput=document.getElementById('photoInput');
+const candidatePhoto=document.getElementById('candidatePhoto');
+const photoPlaceholder=document.querySelector('.photo-placeholder');
+photoInput.addEventListener('change',e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    candidatePhoto.src=ev.target.result;
+    candidatePhoto.classList.add('loaded');
+    photoPlaceholder.style.display='none';
+  };
+  reader.readAsDataURL(file);
+});
+
+// ── INTERACTIVE SKILL TABS ──
+const skillData = {
+  languages: {
+    desc: 'Core programming languages used across enterprise fullstack projects.',
+    items: ['C#','TypeScript','JavaScript','SQL','HTML / CSS','PowerShell','Bash']
+  },
+  frameworks: {
+    desc: 'Frameworks and libraries powering frontend and backend delivery.',
+    items: ['.NET Core','.NET Framework','Angular','React','Entity Framework','NgRx','Angular Material']
+  },
+  cloud: {
+    desc: 'Azure-centric cloud expertise including identity, DevOps, and API management.',
+    items: ['Microsoft Azure','Azure AD B2C','Azure DevOps','Azure APIM','Azure Front Door','OAuth 2.0','CI / CD']
+  },
+  databases: {
+    desc: 'Data persistence, integration pipelines, and development tooling.',
+    items: ['SQL Server','MongoDB','SSIS','Git / TFS','Visual Studio','VS Code','Postman','Fiddler']
+  },
+  protocols: {
+    desc: 'API design patterns and communication protocols across distributed systems.',
+    items: ['REST','GraphQL','SOAP','CQRS','Agile / Scrum','Clean Architecture']
+  }
+};
+
+const skillPanel = document.getElementById('skillPanel');
+const skillCatDesc = document.getElementById('skillCatDesc');
+const tabs = document.querySelectorAll('.stab');
+
+function renderSkills(cat) {
+  const data = skillData[cat];
+  skillCatDesc.textContent = data.desc;
+  skillPanel.classList.remove('animating');
+  void skillPanel.offsetWidth; // reflow
+  skillPanel.classList.add('animating');
+  skillPanel.innerHTML = data.items.map(item => `
+    <div class="sk-tag">
+      <div class="sk-tag-dot"></div>
+      <span class="sk-tag-name">${item}</span>
+    </div>
+  `).join('');
+}
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderSkills(tab.dataset.cat);
+  });
+});
+
+// Init
+renderSkills('languages');
+
+// ── STAR RATINGS ──
+const expertise=[
+  {label:'C# / .NET Core', stars:5},
+  {label:'Angular & React', stars:5},
+  {label:'Microsoft Azure', stars:4},
+  {label:'Enterprise APIs', stars:5},
+  {label:'Azure AD B2C',   stars:4},
+];
+const list=document.getElementById('expertiseList');
+expertise.forEach((item,i)=>{
+  const row=document.createElement('div');
+  row.className='ep-item';
+  const lbl=document.createElement('span');
+  lbl.className='ep-label';
+  lbl.textContent=item.label;
+  const stars=document.createElement('div');
+  stars.className='ep-stars';
+  for(let s=1;s<=5;s++){
+    const star=document.createElement('span');
+    star.className='star'+(s<=item.stars?' on':'');
+    star.textContent='★';
+    star.dataset.idx=i;
+    star.dataset.val=s;
+    star.addEventListener('click',function(){
+      const val=parseInt(this.dataset.val);
+      const idx=parseInt(this.dataset.idx);
+      expertise[idx].stars=val;
+      renderStars(idx,val);
+    });
+    star.addEventListener('mouseover',function(){
+      const val=parseInt(this.dataset.val);
+      const idx=parseInt(this.dataset.idx);
+      previewStars(idx,val);
+    });
+    star.addEventListener('mouseleave',function(){
+      const idx=parseInt(this.dataset.idx);
+      renderStars(idx,expertise[idx].stars);
+    });
+    stars.appendChild(star);
+  }
+  row.appendChild(lbl);
+  row.appendChild(stars);
+  list.appendChild(row);
+});
+
+function renderStars(idx,val){
+  const rows=list.querySelectorAll('.ep-item');
+  const stars=rows[idx].querySelectorAll('.star');
+  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
+}
+
+function previewStars(idx,val){
+  const rows=list.querySelectorAll('.ep-item');
+  const stars=rows[idx].querySelectorAll('.star');
+  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
+}
+</script>
+
+<script>
 window.addEventListener("DOMContentLoaded", () => {
 
   let editMode = false;
@@ -1033,10 +1179,7 @@ ${cleanDeck.outerHTML}
   loadEdits();
 
 });
-
-} catch (err) {
-  console.error("Script error:", err);
-}
 </script>
+
 </body>
 </html>
