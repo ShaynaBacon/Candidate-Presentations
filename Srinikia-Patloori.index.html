@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jane Doe · New Era Technology @ Liberty Mutual</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+
+:root{
+  --navy:   #002d6a;
+  --blue:   #4ac6e9;
+  --white:  #ffffff;
+  --navy2:  #001f4d;
+  --blue2:  #2fb3d8;
+  --mist:   rgba(74,198,233,0.08);
+  --border: rgba(74,198,233,0.18);
+  --text-dim: rgba(255,255,255,0.5);
+  --text-mid: rgba(255,255,255,0.72);
+}
+
+html,body{width:100%;height:100%;overflow:hidden;background:var(--navy);font-family:'Outfit',sans-serif;color:#fff;}
+
+/* ── DECK ── */
+#deck{position:relative;width:100vw;height:100vh;overflow:hidden;}
+
+.slide{
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  padding:56px 72px;
+  opacity:0;
+  transform:translateX(56px);
+  transition:opacity .55s cubic-bezier(.4,0,.2,1),transform .55s cubic-bezier(.4,0,.2,1);
+  pointer-events:none;
+  overflow:hidden;
+}
+.slide.active{opacity:1;transform:translateX(0);pointer-events:all;}
+.slide.out-left{opacity:0;transform:translateX(-56px);}
+
+/* animated children */
+.slide.active .anim{animation:fadeUp .5s both;}
+.slide.active .anim:nth-child(1){animation-delay:.05s}
+.slide.active .anim:nth-child(2){animation-delay:.12s}
+.slide.active .anim:nth-child(3){animation-delay:.19s}
+.slide.active .anim:nth-child(4){animation-delay:.26s}
+@keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── BACKGROUND LAYERS ── */
+.bg{position:absolute;inset:0;pointer-events:none;overflow:hidden;}
+.bg-grid{
+  position:absolute;inset:0;
+  background-image:linear-gradient(rgba(74,198,233,.07) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(74,198,233,.07) 1px,transparent 1px);
+  background-size:52px 52px;
+}
+.bg-glow{
+  position:absolute;border-radius:50%;filter:blur(80px);pointer-events:none;
+  background:radial-gradient(circle,var(--blue) 0%,transparent 70%);
+  opacity:.12;
+}
+.bg-corner{
+  position:absolute;bottom:-120px;right:-80px;
+  width:460px;height:460px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(74,198,233,.18) 0%,transparent 65%);
+  pointer-events:none;
+}
+
+/* ── CHROME ── */
+#topbar{
+  position:fixed;top:0;left:0;right:0;height:52px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;
+  background:rgba(0,29,78,.7);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);
+  z-index:200;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-dot{width:9px;height:9px;border-radius:50%;background:var(--blue);}
+.brand-text{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--text-dim);}
+.brand-text span{color:var(--blue);}
+#counter{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-dim);}
+
+/* ── NAV BAR ── */
+#navbar{
+  position:fixed;bottom:28px;left:50%;transform:translateX(-50%);
+  display:flex;align-items:center;gap:10px;
+  background:rgba(0,29,78,.75);backdrop-filter:blur(14px);
+  border:1px solid var(--border);border-radius:40px;
+  padding:9px 18px;z-index:200;
+}
+.ndot{
+  width:7px;height:7px;border-radius:50%;
+  background:rgba(255,255,255,.2);cursor:pointer;
+  transition:all .3s;
+}
+.ndot.active{width:22px;border-radius:4px;background:var(--blue);}
+.nbtn{
+  background:none;border:none;color:#fff;cursor:pointer;
+  font-size:17px;opacity:.45;transition:opacity .2s;padding:2px 5px;line-height:1;
+}
+.nbtn:hover{opacity:1;}
+
+/* ── SHARED ATOMS ── */
+.eyebrow{
+  font-size:10px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--blue);font-weight:600;margin-bottom:14px;
+  display:flex;align-items:center;gap:10px;
+}
+.eyebrow::before{content:'';width:24px;height:1px;background:var(--blue);display:block;}
+
+.serif{font-family:'Cormorant Garamond',serif;}
+.h1{font-family:'Cormorant Garamond',serif;font-size:clamp(42px,5.5vw,78px);font-weight:700;line-height:.95;}
+.h1 em{font-style:italic;color:var(--blue);}
+.h2{font-family:'Cormorant Garamond',serif;font-size:clamp(28px,3.5vw,50px);font-weight:700;line-height:1.05;}
+.h2 em{font-style:italic;color:var(--blue);}
+
+.card{
+  background:var(--mist);
+  border:1px solid var(--border);
+  border-radius:16px;padding:22px 26px;
+}
+.tag{
+  display:inline-flex;align-items:center;
+  padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;
+  border:1px solid var(--border);color:var(--blue);background:rgba(74,198,233,.08);
+}
+.pill{
+  display:inline-block;padding:4px 13px;border-radius:20px;font-size:12px;font-weight:500;
+  background:rgba(74,198,233,.1);border:1px solid rgba(74,198,233,.22);color:rgba(255,255,255,.75);
+  transition:all .18s;
+}
+.pill:hover,.pill.hi{background:rgba(74,198,233,.25);border-color:rgba(74,198,233,.5);color:#fff;}
+.divider{width:100%;height:1px;background:var(--border);margin:18px 0;}
+
+/* ════════════════════════════
+   SLIDE 1 — TITLE / STATS
+════════════════════════════ */
+#s1{background:var(--navy2);align-items:flex-start;}
+.s1-grid{display:grid;grid-template-columns:1fr 400px;gap:52px;width:100%;max-width:1160px;align-items:start;}
+
+.s1-name{
+  font-family:'Cormorant Garamond',serif;
+  font-size:clamp(48px,6vw,84px);font-weight:700;line-height:.9;
+}
+.s1-name .first{display:block;}
+.s1-name .last{display:block;font-style:italic;color:var(--blue);}
+.s1-role{
+  font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+  color:var(--text-dim);margin-top:16px;margin-bottom:8px;
+}
+.s1-loc{font-size:13px;color:var(--text-dim);display:flex;align-items:center;gap:6px;margin-bottom:20px;}
+.s1-summary{font-size:13px;line-height:1.75;color:var(--text-mid);font-weight:300;}
+
+.edu-box{
+  margin-top:16px;background:var(--mist);border:1px solid var(--border);border-radius:12px;padding:14px 18px;
+  display:flex;align-items:center;gap:14px;
+}
+.edu-icon{font-size:20px;}
+.edu-deg{font-size:13px;font-weight:600;color:#fff;}
+.edu-sub{font-size:11px;color:var(--text-dim);}
+
+/* RIGHT COLUMN */
+.s1-right{display:flex;flex-direction:column;gap:12px;}
+
+/* Photo upload */
+.photo-frame{
+  width:100%;height:172px;
+  border-radius:14px;
+  border:2px dashed rgba(74,198,233,.35);
+  background:rgba(74,198,233,.04);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:7px;cursor:pointer;position:relative;overflow:hidden;
+  transition:border-color .2s,background .2s;
+}
+.photo-frame:hover{border-color:rgba(74,198,233,.65);background:rgba(74,198,233,.09);}
+.photo-frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:12px;display:none;}
+.photo-frame img.loaded{display:block;}
+.photo-placeholder{display:flex;flex-direction:column;align-items:center;gap:5px;pointer-events:none;z-index:1;}
+.photo-placeholder svg{opacity:.38;}
+.photo-placeholder span{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text-dim);}
+.photo-input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:2;}
+
+/* Stats */
+.stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.stat-box{
+  background:var(--mist);border:1px solid var(--border);border-radius:12px;
+  padding:14px 15px;position:relative;overflow:hidden;
+}
+.stat-box::after{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--navy),var(--blue));
+}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:34px;font-weight:700;line-height:1;color:#fff;}
+.stat-n em{font-style:normal;color:var(--blue);}
+.stat-l{font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-dim);margin-top:3px;}
+
+/* Top 5 Expertise with stars */
+.expertise-panel{background:var(--mist);border:1px solid var(--border);border-radius:13px;padding:15px 17px;}
+.ep-head{font-size:10px;text-transform:uppercase;letter-spacing:.16em;color:var(--blue);font-weight:600;margin-bottom:11px;}
+.ep-list{display:flex;flex-direction:column;gap:8px;}
+.ep-item{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ep-label{font-size:13px;color:rgba(255,255,255,.82);font-weight:500;}
+.ep-stars{display:flex;gap:2px;flex-shrink:0;}
+.star{font-size:13px;cursor:pointer;color:rgba(255,255,255,.15);transition:color .15s,transform .15s;user-select:none;line-height:1;}
+.star.on{color:var(--blue);}
+.star:hover{transform:scale(1.25);}
+.ep-hint{font-size:10px;color:var(--text-dim);margin-top:9px;padding-top:9px;border-top:1px solid var(--border);letter-spacing:.04em;}
+
+/* ════════════════════════════
+   SLIDE 2 — EXPERIENCE
+════════════════════════════ */
+#s2{background:var(--navy);align-items:flex-start;}
+.s2-layout{display:grid;grid-template-columns:1fr 1fr;gap:40px;width:100%;max-width:1120px;}
+
+.tl{display:flex;flex-direction:column;gap:0;}
+.tl-item{display:flex;gap:14px;padding-bottom:22px;position:relative;}
+.tl-item:not(:last-child)::after{
+  content:'';position:absolute;left:15px;top:32px;bottom:0;
+  width:1px;background:linear-gradient(to bottom,rgba(74,198,233,.35),transparent);
+}
+.tl-dot{
+  width:31px;height:31px;border-radius:50%;flex-shrink:0;
+  border:1.5px solid var(--border);background:var(--navy2);
+  display:flex;align-items:center;justify-content:center;margin-top:1px;
+}
+.tl-dot.hi{border-color:var(--blue);background:rgba(74,198,233,.12);}
+.tl-dot svg{width:12px;height:12px;}
+.tl-role{font-size:13px;font-weight:600;color:#fff;}
+.tl-org{font-size:12px;color:var(--blue);margin-bottom:3px;font-weight:500;}
+.tl-dur{font-size:10px;text-transform:uppercase;letter-spacing:.09em;color:var(--text-dim);margin-bottom:5px;}
+.tl-pts{list-style:none;display:flex;flex-direction:column;gap:3px;}
+.tl-pts li{font-size:12px;color:var(--text-mid);line-height:1.55;padding-left:12px;position:relative;}
+.tl-pts li::before{content:'–';position:absolute;left:0;color:var(--blue);opacity:.6;}
+
+/* ════════════════════════════
+   SLIDE 3 — CASE STUDIES + SKILLS
+════════════════════════════ */
+#s3{background:linear-gradient(150deg,#001f4d 0%,var(--navy) 100%);align-items:flex-start;justify-content:flex-start;padding-top:68px;}
+.s3-layout{width:100%;max-width:1120px;}
+.cases-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px;}
+.case-card{
+  background:var(--mist);border:1px solid var(--border);border-radius:16px;
+  padding:22px 20px;position:relative;overflow:hidden;
+  transition:transform .2s,border-color .2s;
+}
+.case-card:hover{transform:translateY(-4px);border-color:rgba(74,198,233,.45);}
+.case-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--cc,var(--blue));}
+.case-n{font-family:'Cormorant Garamond',serif;font-size:44px;font-weight:700;color:rgba(255,255,255,.04);position:absolute;top:12px;right:16px;line-height:1;}
+.case-client{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--blue);font-weight:600;margin-bottom:8px;}
+.case-title{font-family:'Cormorant Garamond',serif;font-size:19px;font-weight:700;color:#fff;line-height:1.2;margin-bottom:10px;}
+.case-body{font-size:12px;color:var(--text-mid);line-height:1.65;margin-bottom:14px;}
+.case-metrics{display:flex;flex-direction:column;gap:6px;}
+.cm{display:flex;align-items:flex-start;gap:8px;}
+.cm-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);flex-shrink:0;margin-top:5px;}
+.cm-t{font-size:11px;color:rgba(255,255,255,.65);line-height:1.45;}
+.cm-t strong{color:#fff;}
+
+.skills-strip{margin-top:20px;display:grid;grid-template-columns:repeat(5,1fr);gap:12px;}
+.sk-col{}
+.sk-head{font-size:10px;text-transform:uppercase;letter-spacing:.14em;color:var(--blue);font-weight:600;margin-bottom:8px;}
+.sk-pills{display:flex;flex-direction:column;gap:5px;}
+.sk-pill{font-size:11px;color:var(--text-mid);padding:3px 0;border-bottom:1px solid rgba(74,198,233,.08);}
+
+/* ════════════════════════════
+   SLIDE 4 — CERTS + SKILLS
+════════════════════════════ */
+#s4{background:var(--navy2);align-items:flex-start;}
+.s4-new-layout{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;margin-top:24px;width:100%;}
+.s4-col-head{font-size:10px;text-transform:uppercase;letter-spacing:.18em;color:var(--blue);font-weight:600;margin-bottom:14px;}
+
+/* Skill tabs */
+.skill-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.stab{
+  padding:6px 14px;border-radius:20px;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  background:rgba(74,198,233,.07);border:1px solid rgba(74,198,233,.18);color:rgba(255,255,255,.5);
+  cursor:pointer;transition:all .2s;
+}
+.stab:hover{background:rgba(74,198,233,.15);color:rgba(255,255,255,.8);}
+.stab.active{background:rgba(74,198,233,.22);border-color:rgba(74,198,233,.5);color:var(--blue);}
+
+.skill-panel{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  min-height:210px;
+}
+.sk-tag{
+  display:flex;align-items:center;gap:8px;
+  background:var(--mist);border:1px solid var(--border);border-radius:10px;
+  padding:10px 14px;cursor:default;
+  transition:border-color .2s,background .2s,transform .18s;
+  position:relative;overflow:hidden;
+}
+.sk-tag:hover{background:rgba(74,198,233,.15);border-color:rgba(74,198,233,.45);transform:translateY(-2px);}
+.sk-tag-dot{width:6px;height:6px;border-radius:50%;background:var(--blue);flex-shrink:0;opacity:.7;}
+.sk-tag-name{font-size:12px;color:rgba(255,255,255,.78);font-weight:500;line-height:1.3;}
+
+.skill-cat-desc{
+  margin-top:12px;padding:10px 14px;
+  background:rgba(74,198,233,.05);border:1px solid rgba(74,198,233,.12);border-radius:10px;
+  font-size:12px;color:var(--text-dim);line-height:1.6;
+  min-height:44px;transition:opacity .2s;
+}
+
+/* Panel fade animation */
+@keyframes panelIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.skill-panel.animating{animation:panelIn .25s ease both;}
+
+.cert-list{display:flex;flex-direction:column;gap:12px;margin-top:20px;}
+.cert-item{
+  display:flex;align-items:flex-start;gap:16px;
+  background:var(--mist);border:1px solid var(--border);border-radius:14px;padding:18px 20px;
+}
+.cert-icon{
+  width:40px;height:40px;border-radius:10px;flex-shrink:0;
+  background:linear-gradient(135deg,rgba(74,198,233,.25),rgba(74,198,233,.05));
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;font-size:18px;
+}
+.cert-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px;}
+.cert-org{font-size:11px;color:var(--blue);margin-bottom:4px;}
+.cert-desc{font-size:12px;color:var(--text-dim);line-height:1.55;}
+
+.acc-list{display:flex;flex-direction:column;gap:14px;margin-top:20px;}
+.acc-item{
+  background:var(--mist);border:1px solid var(--border);border-radius:14px;padding:18px 20px;
+  position:relative;overflow:hidden;
+}
+.acc-item::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--blue);}
+.acc-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:5px;}
+.acc-body{font-size:12px;color:var(--text-mid);line-height:1.6;}
+
+/* ════════════════════════════
+   SLIDE 5 — NEW ERA INFO
+════════════════════════════ */
+#s5{background:linear-gradient(140deg,#001838 0%,var(--navy) 100%);align-items:flex-start;}
+.s5-layout{display:grid;grid-template-columns:1fr 1fr;gap:52px;width:100%;max-width:1120px;}
+
+.s5-intro{font-size:14px;color:var(--text-mid);line-height:1.8;font-weight:300;margin-top:18px;}
+.s5-intro strong{color:#fff;font-weight:600;}
+
+.pillars{display:flex;flex-direction:column;gap:12px;margin-top:22px;}
+.pillar{
+  display:flex;align-items:flex-start;gap:14px;
+  background:var(--mist);border:1px solid var(--border);border-radius:12px;padding:14px 18px;
+}
+.p-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.p-title{font-size:13px;font-weight:600;color:#fff;margin-bottom:3px;}
+.p-body{font-size:12px;color:var(--text-dim);line-height:1.55;}
+
+.liberty-panel{
+  background:linear-gradient(145deg,rgba(74,198,233,.12),rgba(74,198,233,.03));
+  border:1px solid rgba(74,198,233,.3);border-radius:18px;padding:30px 28px;
+}
+.lp-title{font-family:'Cormorant Garamond',serif;font-size:24px;font-weight:700;color:#fff;margin-bottom:6px;}
+.lp-sub{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--blue);margin-bottom:22px;}
+
+.lp-stats{display:flex;flex-direction:column;gap:14px;}
+.lp-stat{display:flex;align-items:center;gap:16px;}
+.lp-num{
+  font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;color:var(--blue);
+  min-width:64px;line-height:1;
+}
+.lp-desc{font-size:13px;color:var(--text-mid);line-height:1.5;}
+.lp-divider{height:1px;background:var(--border);margin:14px 0;}
+
+.award-badge{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(74,198,233,.08);border:1px solid rgba(74,198,233,.25);border-radius:10px;
+  padding:12px 16px;margin-top:16px;
+}
+.ab-icon{font-size:22px;}
+.ab-text{font-size:12px;color:#fff;font-weight:500;}
+.ab-sub{font-size:11px;color:var(--text-dim);}
+
+/* ════════════════════════════
+   SLIDE 6 — CLOSING (css above)
+════════════════════════════ */
+
+/* ════════════════════════════
+   SLIDE 6 — CLOSING
+════════════════════════════ */
+#s6{background:linear-gradient(135deg,#001838 0%,var(--navy) 60%);text-align:center;justify-content:center;align-items:center;}
+.s7-wrap{max-width:700px;position:relative;z-index:2;}
+.s7-name{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,7vw,92px);font-weight:700;line-height:.92;margin-bottom:10px;}
+.s7-name em{font-style:italic;color:var(--blue);}
+.s7-tagline{font-size:16px;color:var(--text-mid);line-height:1.75;margin:26px 0 36px;font-weight:300;}
+.s7-tagline strong{color:#fff;font-weight:600;}
+.contact-row{display:flex;justify-content:center;gap:16px;flex-wrap:wrap;margin-bottom:36px;}
+.contact-chip{
+  display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-mid);
+  background:var(--mist);border:1px solid var(--border);padding:9px 18px;border-radius:30px;
+}
+.cta{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--blue);color:var(--navy);
+  font-weight:700;font-size:13px;letter-spacing:.07em;text-transform:uppercase;
+  padding:14px 34px;border-radius:50px;border:none;cursor:pointer;text-decoration:none;
+  box-shadow:0 8px 28px rgba(74,198,233,.35);
+  transition:transform .2s,box-shadow .2s;
+}
+.cta:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(74,198,233,.5);}
+.sig{margin-top:36px;padding-top:28px;border-top:1px solid var(--border);font-size:11px;color:var(--text-dim);letter-spacing:.1em;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div id="topbar">
+  <div class="brand">
+    <div class="brand-dot"></div>
+    <div class="brand-text">New Era Technology <span>@ Liberty Mutual</span></div>
+  </div>
+  <div id="counter">01 / 06</div>
+</div>
+
+<!-- DECK -->
+<div id="deck">
+
+<!-- ══ S1 — TITLE ══ -->
+<div class="slide active" id="s1">
+  <div class="bg"><div class="bg-grid"></div><div class="bg-glow" style="width:600px;height:600px;top:-180px;right:-120px;"></div><div class="bg-corner"></div></div>
+  <div class="s1-grid">
+    <!-- LEFT: name + summary + edu -->
+    <div class="anim">
+      <div class="s1-name">
+        <span class="first">Jane</span>
+        <span class="last">Doe</span>
+      </div>
+      <div class="s1-role">Sr. Fullstack Developer · New Era Technology</div>
+      <div class="s1-loc">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Cincinnati, OH
+      </div>
+      <p class="s1-summary">Senior Developer with 15+ years of experience in enterprise application development using .NET technologies, JavaScript, Angular, and React. Expertise implementing CI/CD pipelines on Microsoft Azure and navigating regulated environments in Healthcare and Financial Services. Skilled mentor passionate about guiding junior developers.</p>
+      <div class="edu-box">
+        <div class="edu-icon">🎓</div>
+        <div>
+          <div class="edu-deg">B.S. Business Informatics</div>
+          <div class="edu-sub">Northern Kentucky University</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: photo + stats + starred expertise -->
+    <div class="s1-right anim" style="animation-delay:.14s;">
+
+      <!-- Photo upload -->
+      <div class="photo-frame" id="photoFrame">
+        <img id="candidatePhoto" alt="Candidate Photo">
+        <div class="photo-placeholder">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4ac6e9" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          <span>Click to upload photo</span>
+        </div>
+        <input type="file" accept="image/*" class="photo-input" id="photoInput">
+      </div>
+
+      <!-- Stats -->
+      <div class="stat-grid">
+        <div class="stat-box">
+          <div class="stat-n">15<em>+</em></div>
+          <div class="stat-l">Years Experience</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n">10<em>+</em></div>
+          <div class="stat-l">Enterprise Clients</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n">3<em>×</em></div>
+          <div class="stat-l">New Era Engagements</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-n">2</div>
+          <div class="stat-l">Industry Verticals</div>
+        </div>
+      </div>
+
+      <!-- Top 5 Expertise with clickable stars -->
+      <div class="expertise-panel">
+        <div class="ep-head">Top Areas of Expertise</div>
+        <div class="ep-list" id="expertiseList">
+          <!-- JS renders these -->
+        </div>
+        <div class="ep-hint">★ Click stars to tailor ratings to the job description</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ S2 — EXPERIENCE ══ -->
+<div class="slide" id="s2">
+  <div class="bg"><div class="bg-grid"></div><div class="bg-glow" style="width:400px;height:400px;bottom:-100px;left:-80px;opacity:.08;"></div></div>
+  <div style="width:100%;max-width:1120px;">
+    <div class="anim"><div class="eyebrow">Career Timeline</div><h2 class="h2">15 Years of <em>Enterprise Delivery</em></h2></div>
+    <div class="s2-layout anim" style="margin-top:26px;">
+
+      <!-- LEFT COLUMN -->
+      <div class="tl">
+        <div class="tl-item">
+          <div class="tl-dot hi"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="#4ac6e9"/></svg></div>
+          <div>
+            <div class="tl-role">Senior Developer</div>
+            <div class="tl-org">New Era Technology | Total Quality Logistics</div>
+            <div class="tl-dur">5 Months</div>
+            <ul class="tl-pts"><li>Modernized legacy WinForms app into React web app + ASP.NET Core Web API</li><li>Built frontend using React with extended base component library</li><li>Implemented Entity Framework ORM; drove standards & best practices</li></ul>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot hi"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="#4ac6e9"/></svg></div>
+          <div>
+            <div class="tl-role">Senior Developer</div>
+            <div class="tl-org">New Era Technology | Simon Property Group</div>
+            <div class="tl-dur">10 Months</div>
+            <ul class="tl-pts"><li>Unified authentication using Azure AD B2C across all platforms</li><li>Designed custom Identity Experience Framework policies for legacy systems</li><li>Built ASP.NET Core Web API integrating Microsoft Graph</li></ul>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot hi"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="#4ac6e9"/></svg></div>
+          <div>
+            <div class="tl-role">Senior Developer</div>
+            <div class="tl-org">New Era Technology | Abercrombie &amp; Fitch</div>
+            <div class="tl-dur">2 Months</div>
+            <ul class="tl-pts"><li>Exposed REST API via Azure API Management + Azure Front Door</li><li>Implemented product-level authentication using APIM API Keys</li></ul>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="rgba(74,198,233,.4)"/></svg></div>
+          <div>
+            <div class="tl-role">Lead Developer</div>
+            <div class="tl-org">Fusion Alliance | Total Quality Logistics</div>
+            <div class="tl-dur">9 Months</div>
+            <ul class="tl-pts"><li>Designed REST APIs with CQRS architecture for shipment management</li><li>Built Angular client with NgRx state management</li><li>Led code reviews and pair programming sessions</li></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="tl">
+        <div class="tl-item">
+          <div class="tl-dot"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="rgba(74,198,233,.4)"/></svg></div>
+          <div>
+            <div class="tl-role">Senior Developer</div>
+            <div class="tl-org">Fusion Alliance | Fifth Third Bank</div>
+            <div class="tl-dur">5 Months</div>
+            <ul class="tl-pts"><li>Upgraded online banking from AngularJS to Angular 12</li><li>Security-focused component conversion with comprehensive unit testing</li></ul>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="rgba(74,198,233,.4)"/></svg></div>
+          <div>
+            <div class="tl-role">Lead Developer</div>
+            <div class="tl-org">Fusion Alliance | Kinetic Advantage</div>
+            <div class="tl-dur">11 Months</div>
+            <ul class="tl-pts"><li>Led Azure B2C authentication/authorization implementation</li><li>Developed REST APIs with ASP.NET Core; Angular Material UI components</li></ul>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="rgba(74,198,233,.3)"/></svg></div>
+          <div>
+            <div class="tl-role">Senior/Lead Developer</div>
+            <div class="tl-org">Orion Portfolio Solutions</div>
+            <div class="tl-dur">1 Year 3 Months</div>
+            <ul class="tl-pts"><li>Architected ASP.NET Core REST API for compliant financial data access</li><li>Integrated SQL Server and SSIS data pipelines</li></ul>
+          </div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"><svg viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="3.5" fill="rgba(74,198,233,.2)"/></svg></div>
+          <div>
+            <div class="tl-role">Front-End Developer &amp; Founder</div>
+            <div class="tl-org">Robert Half Technology / Webforge / GlueWorks</div>
+            <div class="tl-dur">8+ Years</div>
+            <ul class="tl-pts"><li>Specialty pharmacy REST API; EMR payment processing integration</li><li>VC/Angel-funded EdTech startup: ASP.NET Web API + MongoDB</li><li>ASP.NET MVC migrations; responsive Bootstrap UIs</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S3 — CASE STUDIES + SKILLS ══ -->
+<div class="slide" id="s3">
+  <div class="bg"><div class="bg-grid"></div></div>
+  <div class="s3-layout">
+    <div class="anim"><div class="eyebrow">Proof of Impact</div><h2 class="h2">Case Studies &amp; <em>Key Engagements</em></h2></div>
+    <div class="cases-row anim">
+      <div class="case-card" style="--cc:#4ac6e9;">
+        <div class="case-n">01</div>
+        <div class="case-client">New Era @ TQL</div>
+        <div class="case-title">Legacy Modernization at Scale</div>
+        <div class="case-body">Total Quality Logistics needed to retire a brittle WinForms app without disrupting freight operations. Delivered a modern full-stack replacement end-to-end.</div>
+        <div class="case-metrics">
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t"><strong>React frontend</strong> with extended base component library</div></div>
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t"><strong>ASP.NET Core Web API</strong> + Entity Framework ORM</div></div>
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t">Zero business disruption during full stack replacement</div></div>
+        </div>
+      </div>
+      <div class="case-card" style="--cc:#2fb3d8;">
+        <div class="case-n">02</div>
+        <div class="case-client">New Era @ Simon Property Group</div>
+        <div class="case-title">Enterprise Identity Unification</div>
+        <div class="case-body">Fragmented auth across global real-estate portfolio created security risk. Unified the entire authentication surface in 10 months.</div>
+        <div class="case-metrics">
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t"><strong>Azure AD B2C</strong> as unified identity provider</div></div>
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t">Custom <strong>Identity Experience Framework</strong> policies</div></div>
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t">MS Graph API bridge to existing legacy systems</div></div>
+        </div>
+      </div>
+      <div class="case-card" style="--cc:#88d9ee;">
+        <div class="case-n">03</div>
+        <div class="case-client">Fusion Alliance @ Fifth Third Bank</div>
+        <div class="case-title">Secure Banking Platform Upgrade</div>
+        <div class="case-body">Deprecated AngularJS posed security vulnerabilities for a major bank's online platform. Delivered full Angular 12 migration with no customer disruption.</div>
+        <div class="case-metrics">
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t"><strong>AngularJS → Angular 12</strong> platform migration</div></div>
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t">Security-first approach; comprehensive unit test coverage</div></div>
+          <div class="cm"><div class="cm-dot"></div><div class="cm-t">Zero security incidents post-launch</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S4 — CERTS & TECHNICAL SKILLS ══ -->
+<div class="slide" id="s4">
+  <div class="bg"><div class="bg-grid"></div><div class="bg-glow" style="width:500px;height:500px;top:-140px;right:-100px;"></div></div>
+  <div style="width:100%;max-width:1160px;">
+    <div class="anim"><div class="eyebrow">Credentials &amp; Capabilities</div><h2 class="h2">Certifications &amp; <em>Technical Skills</em></h2></div>
+    <div class="s4-new-layout anim">
+
+      <!-- LEFT: Certs -->
+      <div class="s4-certs">
+        <div class="s4-col-head">Certifications</div>
+        <div class="cert-list">
+          <div class="cert-item">
+            <div class="cert-icon">☁️</div>
+            <div>
+              <div class="cert-title">Microsoft Certified: Azure Developer Associate</div>
+              <div class="cert-org">Microsoft · AZ-204</div>
+              <div class="cert-desc">Designing, building, testing, and maintaining cloud applications on Azure.</div>
+            </div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">🔐</div>
+            <div>
+              <div class="cert-title">Microsoft Identity Platform &amp; Azure AD B2C</div>
+              <div class="cert-org">Microsoft Learn · Practical Certification</div>
+              <div class="cert-desc">Identity experience frameworks, custom policies, enterprise authentication flows.</div>
+            </div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">🅰️</div>
+            <div>
+              <div class="cert-title">Angular Advanced Development</div>
+              <div class="cert-org">Udemy / Internal Certification</div>
+              <div class="cert-desc">NgRx, Angular Material, performance optimization, and testing.</div>
+            </div>
+          </div>
+          <div class="cert-item">
+            <div class="cert-icon">📐</div>
+            <div>
+              <div class="cert-title">CQRS &amp; Clean Architecture Practitioner</div>
+              <div class="cert-org">Enterprise Patterns Training</div>
+              <div class="cert-desc">Applied across production shipment management APIs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Interactive Skills -->
+      <div class="s4-skills">
+        <div class="s4-col-head">Technical Skills</div>
+        <div class="skill-tabs">
+          <button class="stab active" data-cat="languages">Languages</button>
+          <button class="stab" data-cat="frameworks">Frameworks</button>
+          <button class="stab" data-cat="cloud">Cloud</button>
+          <button class="stab" data-cat="databases">Databases &amp; Tools</button>
+          <button class="stab" data-cat="protocols">Protocols</button>
+        </div>
+        <div class="skill-panel" id="skillPanel">
+          <!-- JS populates -->
+        </div>
+        <div class="skill-cat-desc" id="skillCatDesc"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ══ S5 — NEW ERA ══ -->
+<div class="slide" id="s5">
+  <div class="bg"><div class="bg-grid"></div><div class="bg-glow" style="width:600px;height:600px;bottom:-200px;right:-100px;opacity:.1;"></div></div>
+  <div class="s5-layout">
+    <div>
+      <div class="anim"><div class="eyebrow">Our Technology Partner</div><h2 class="h2">About <em>New Era Technology</em></h2></div>
+      <p class="s5-intro anim"><strong>New Era Technology is your technology solution provider.</strong> New Era has an extensive team of Engineers, Designers, Installers, Technicians, and Sales Professionals — all providing hands-on collaborative consultation backed by deep industry training and certification. From concept and implementation, to training and service, New Era works in partnership with clients to meet their goals.</p>
+      <div class="pillars anim">
+        <div class="pillar"><div class="p-icon">🤝</div><div><div class="p-title">Collaborative Partnership</div><div class="p-body">Every engagement is a true partnership — not a vendor transaction. New Era embeds deeply with client teams to align on goals and deliver outcomes.</div></div></div>
+        <div class="pillar"><div class="p-icon">🏗️</div><div><div class="p-title">End-to-End Expertise</div><div class="p-body">From concept through implementation to ongoing service — New Era professionals carry the full lifecycle, ensuring continuity and quality at every phase.</div></div></div>
+        <div class="pillar"><div class="p-icon">📜</div><div><div class="p-title">Deep Certification &amp; Training</div><div class="p-body">Engineers and specialists maintain rigorous industry certifications, ensuring clients receive advice grounded in verified, current best practices.</div></div></div>
+      </div>
+    </div>
+    <div class="anim">
+      <div class="eyebrow">New Era @ Liberty Mutual</div>
+      <div class="liberty-panel">
+        <div class="lp-title">A 25-Year Trusted Partnership</div>
+        <div class="lp-sub">Liberty Mutual Insurance · Track Record</div>
+        <div class="lp-stats">
+          <div class="lp-stat"><div class="lp-num">#1</div><div class="lp-desc">Rated IT Supplier at Liberty Mutual — 2016 &amp; 2017</div></div>
+          <div class="lp-divider"></div>
+          <div class="lp-stat"><div class="lp-num">77%</div><div class="lp-desc">Record-setting Net Promotor Score in 2016</div></div>
+          <div class="lp-divider"></div>
+          <div class="lp-stat"><div class="lp-num">93%</div><div class="lp-desc">New record Net Promotor Score established in 2017</div></div>
+          <div class="lp-divider"></div>
+          <div class="lp-stat"><div class="lp-num">25<span style="font-size:18px;">yr</span></div><div class="lp-desc">Continuous trusted partnership with Liberty Mutual</div></div>
+        </div>
+        <div class="award-badge">
+          <div class="ab-icon">🏆</div>
+          <div>
+            <div class="ab-text">Distinguished Service Award</div>
+            <div class="ab-sub">Awarded by Liberty Mutual · 2017</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ S6 — CLOSING ══ -->
+<div class="slide" id="s6">
+  <div class="bg"><div class="bg-grid" style="opacity:.4;"></div><div class="bg-glow" style="width:800px;height:800px;top:50%;left:50%;transform:translate(-50%,-50%);opacity:.1;"></div></div>
+  <div class="s7-wrap">
+    <div class="anim"><div class="eyebrow" style="justify-content:center;">Thank You</div></div>
+    <div class="s7-name anim">
+      Let's Build<br><em>Something Great</em>
+    </div>
+    <p class="s7-tagline anim">
+      I bring <strong>15+ years of enterprise fullstack expertise</strong>, a proven record of delivering for New Era clients, and the mindset of a senior developer who leads as well as she codes. I'm ready to make an immediate impact at Liberty Mutual.
+    </p>
+    <div class="contact-row anim">
+      <div class="contact-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn Profile
+      </div>
+      <div class="contact-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Cincinnati, OH
+      </div>
+      <div class="contact-chip">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Available Immediately
+      </div>
+    </div>
+    <a href="https://www.linkedin.com/in/" target="_blank" class="cta anim">
+      View My LinkedIn
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+    </a>
+  </div>
+</div>
+
+</div><!-- /deck -->
+
+<!-- NAV -->
+<nav id="navbar">
+  <button class="nbtn" onclick="go(-1)">&#8592;</button>
+  <div class="ndot active" onclick="goTo(0)"></div>
+  <div class="ndot" onclick="goTo(1)"></div>
+  <div class="ndot" onclick="goTo(2)"></div>
+  <div class="ndot" onclick="goTo(3)"></div>
+  <div class="ndot" onclick="goTo(4)"></div>
+  <div class="ndot" onclick="goTo(5)"></div>
+  <button class="nbtn" onclick="go(1)">&#8594;</button>
+</nav>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const dots=[...document.querySelectorAll('.ndot')];
+const counter=document.getElementById('counter');
+let cur=0,locked=false;
+
+function goTo(n){
+  if(n===cur||locked)return;
+  locked=true;
+  slides[cur].classList.remove('active');
+  slides[cur].classList.add('out-left');
+  const prev=cur;
+  setTimeout(()=>{slides[prev].classList.remove('out-left');},600);
+  dots[cur].classList.remove('active');
+  cur=n;
+  slides[cur].classList.add('active');
+  dots[cur].classList.add('active');
+  counter.textContent=String(cur+1).padStart(2,'0')+' / 06';
+  setTimeout(()=>locked=false,650);
+}
+
+function go(d){goTo((cur+d+slides.length)%slides.length);}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')go(1);
+  if(e.key==='ArrowLeft'||e.key==='ArrowUp')go(-1);
+});
+
+let sx=0;
+document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-sx;
+  if(Math.abs(dx)>50)go(dx<0?1:-1);
+});
+
+// ── PHOTO UPLOAD ──
+const photoInput=document.getElementById('photoInput');
+const candidatePhoto=document.getElementById('candidatePhoto');
+const photoPlaceholder=document.querySelector('.photo-placeholder');
+photoInput.addEventListener('change',e=>{
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    candidatePhoto.src=ev.target.result;
+    candidatePhoto.classList.add('loaded');
+    photoPlaceholder.style.display='none';
+  };
+  reader.readAsDataURL(file);
+});
+
+// ── INTERACTIVE SKILL TABS ──
+const skillData = {
+  languages: {
+    desc: 'Core programming languages used across enterprise fullstack projects.',
+    items: ['C#','TypeScript','JavaScript','SQL','HTML / CSS','PowerShell','Bash']
+  },
+  frameworks: {
+    desc: 'Frameworks and libraries powering frontend and backend delivery.',
+    items: ['.NET Core','.NET Framework','Angular','React','Entity Framework','NgRx','Angular Material']
+  },
+  cloud: {
+    desc: 'Azure-centric cloud expertise including identity, DevOps, and API management.',
+    items: ['Microsoft Azure','Azure AD B2C','Azure DevOps','Azure APIM','Azure Front Door','OAuth 2.0','CI / CD']
+  },
+  databases: {
+    desc: 'Data persistence, integration pipelines, and development tooling.',
+    items: ['SQL Server','MongoDB','SSIS','Git / TFS','Visual Studio','VS Code','Postman','Fiddler']
+  },
+  protocols: {
+    desc: 'API design patterns and communication protocols across distributed systems.',
+    items: ['REST','GraphQL','SOAP','CQRS','Agile / Scrum','Clean Architecture']
+  }
+};
+
+const skillPanel = document.getElementById('skillPanel');
+const skillCatDesc = document.getElementById('skillCatDesc');
+const tabs = document.querySelectorAll('.stab');
+
+function renderSkills(cat) {
+  const data = skillData[cat];
+  skillCatDesc.textContent = data.desc;
+  skillPanel.classList.remove('animating');
+  void skillPanel.offsetWidth; // reflow
+  skillPanel.classList.add('animating');
+  skillPanel.innerHTML = data.items.map(item => `
+    <div class="sk-tag">
+      <div class="sk-tag-dot"></div>
+      <span class="sk-tag-name">${item}</span>
+    </div>
+  `).join('');
+}
+
+tabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    tabs.forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderSkills(tab.dataset.cat);
+  });
+});
+
+// Init
+renderSkills('languages');
+
+// ── STAR RATINGS ──
+const expertise=[
+  {label:'C# / .NET Core', stars:5},
+  {label:'Angular & React', stars:5},
+  {label:'Microsoft Azure', stars:4},
+  {label:'Enterprise APIs', stars:5},
+  {label:'Azure AD B2C',   stars:4},
+];
+const list=document.getElementById('expertiseList');
+expertise.forEach((item,i)=>{
+  const row=document.createElement('div');
+  row.className='ep-item';
+  const lbl=document.createElement('span');
+  lbl.className='ep-label';
+  lbl.textContent=item.label;
+  const stars=document.createElement('div');
+  stars.className='ep-stars';
+  for(let s=1;s<=5;s++){
+    const star=document.createElement('span');
+    star.className='star'+(s<=item.stars?' on':'');
+    star.textContent='★';
+    star.dataset.idx=i;
+    star.dataset.val=s;
+    star.addEventListener('click',function(){
+      const val=parseInt(this.dataset.val);
+      const idx=parseInt(this.dataset.idx);
+      expertise[idx].stars=val;
+      renderStars(idx,val);
+    });
+    star.addEventListener('mouseover',function(){
+      const val=parseInt(this.dataset.val);
+      const idx=parseInt(this.dataset.idx);
+      previewStars(idx,val);
+    });
+    star.addEventListener('mouseleave',function(){
+      const idx=parseInt(this.dataset.idx);
+      renderStars(idx,expertise[idx].stars);
+    });
+    stars.appendChild(star);
+  }
+  row.appendChild(lbl);
+  row.appendChild(stars);
+  list.appendChild(row);
+});
+
+function renderStars(idx,val){
+  const rows=list.querySelectorAll('.ep-item');
+  const stars=rows[idx].querySelectorAll('.star');
+  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
+}
+
+function previewStars(idx,val){
+  const rows=list.querySelectorAll('.ep-item');
+  const stars=rows[idx].querySelectorAll('.star');
+  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
+}
+<!-- ✅ MAIN DECK SCRIPT -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  // ── NAVIGATION ──
+  const slides=[...document.querySelectorAll('.slide')];
+  const dots=[...document.querySelectorAll('.ndot')];
+  const counter=document.getElementById('counter');
+
+  let cur=0,locked=false;
+
+  window.goTo=function(n){
+    if(n===cur||locked)return;
+    locked=true;
+
+    slides[cur].classList.remove('active');
+    slides[cur].classList.add('out-left');
+
+    const prev=cur;
+    setTimeout(()=>slides[prev].classList.remove('out-left'),600);
+
+    dots[cur].classList.remove('active');
+    cur=n;
+
+    slides[cur].classList.add('active');
+    dots[cur].classList.add('active');
+    counter.textContent=String(cur+1).padStart(2,'0')+' / 06';
+
+    setTimeout(()=>locked=false,650);
+  }
+
+  window.go=function(d){
+    goTo((cur+d+slides.length)%slides.length);
+  }
+
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight')go(1);
+    if(e.key==='ArrowLeft')go(-1);
+  });
+
+  // ── PHOTO UPLOAD ──
+  const input=document.getElementById('photoInput');
+  const img=document.getElementById('candidatePhoto');
+  const placeholder=document.querySelector('.photo-placeholder');
+
+  input.addEventListener('change',e=>{
+    const file=e.target.files[0];
+    if(!file)return;
+
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      img.src=ev.target.result;
+      img.classList.add('loaded');
+      placeholder.style.display='none';
+    };
+    reader.readAsDataURL(file);
+  });
+
+  // ── STAR RATINGS ──
+  const expertise=[
+    {label:'C# / .NET Core',stars:5},
+    {label:'Angular & React',stars:5},
+    {label:'Microsoft Azure',stars:4},
+    {label:'Enterprise APIs',stars:5},
+    {label:'Azure AD B2C',stars:4},
+  ];
+
+  const list=document.getElementById('expertiseList');
+
+  expertise.forEach((item,i)=>{
+    const row=document.createElement('div');
+    row.className='ep-item';
+
+    const lbl=document.createElement('span');
+    lbl.className='ep-label';
+    lbl.textContent=item.label;
+
+    const stars=document.createElement('div');
+    stars.className='ep-stars';
+
+    for(let s=1;s<=5;s++){
+      const star=document.createElement('span');
+      star.className='star'+(s<=item.stars?' on':'');
+      star.textContent='★';
+
+      star.onclick=()=>{
+        expertise[i].stars=s;
+        renderStars(i,s);
+      };
+
+      star.onmouseover=()=>previewStars(i,s);
+      star.onmouseleave=()=>renderStars(i,expertise[i].stars);
+
+      stars.appendChild(star);
+    }
+
+    row.appendChild(lbl);
+    row.appendChild(stars);
+    list.appendChild(row);
+  });
+
+  function renderStars(idx,val){
+    const stars=list.querySelectorAll('.ep-item')[idx].querySelectorAll('.star');
+    stars.forEach((s,i)=>s.classList.toggle('on',i<val));
+  }
+
+  function previewStars(idx,val){
+    const stars=list.querySelectorAll('.ep-item')[idx].querySelectorAll('.star');
+    stars.forEach((s,i)=>s.classList.toggle('on',i<val));
+  }
+
+});
+</script>
+
+
+<!-- ✅ EDIT / SAVE / EXPORT -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+
+  let editMode=false;
+
+  const editable=`
+    .s1-name, .s1-role, .s1-summary,
+    .edu-deg, .edu-sub,
+    .stat-n, .stat-l,
+    .tl-role, .tl-org, .tl-dur, .tl-pts li,
+    .case-title, .case-body, .cm-t,
+    .cert-title, .cert-desc,
+    .p-title, .p-body,
+    .lp-title, .lp-desc,
+    .s7-tagline
+  `;
+
+  function toggleEdit(){
+    editMode=!editMode;
+
+    document.querySelectorAll(editable).forEach(el=>{
+      el.contentEditable=editMode;
+      el.style.outline=editMode ? "2px dashed #4ac6e9" : "none";
+    });
+  }
+
+  function save(){
+    const data=[...document.querySelectorAll(editable)].map(el=>el.innerHTML);
+    localStorage.setItem("deck",JSON.stringify(data));
+    alert("✅ Saved");
+  }
+
+  function load(){
+    const saved=JSON.parse(localStorage.getItem("deck"));
+    if(!saved)return;
+
+    document.querySelectorAll(editable).forEach((el,i)=>{
+      if(saved[i]) el.innerHTML=saved[i];
+    });
+  }
+
+  function exportHTML(){
+    const deck=document.getElementById("deck").cloneNode(true);
+
+    deck.querySelectorAll("[contenteditable]").forEach(el=>{
+      el.removeAttribute("contenteditable");
+      el.style.outline="none";
+    });
+
+    const html=`<!DOCTYPE html>
+<html>
+<head>${document.head.innerHTML}</head>
+<body>${deck.outerHTML}</body>
+</html>`;
+
+    const blob=new Blob([html],{type:"text/html"});
+    const link=document.createElement("a");
+    link.href=URL.createObjectURL(blob);
+    link.download="candidate.html";
+    link.click();
+  }
+
+  function btn(txt,top,fn){
+    const b=document.createElement("button");
+
+    b.innerText=txt;
+    b.style.position="fixed";
+    b.style.top=top;
+    b.style.right="20px";
+    b.style.zIndex="9999";
+    b.style.padding="10px";
+    b.style.background="#4ac6e9";
+    b.style.border="none";
+    b.style.borderRadius="20px";
+    b.style.cursor="pointer";
+
+    b.onclick=fn;
+    document.body.appendChild(b);
+  }
+
+  btn("Edit", "20px", toggleEdit);
+  btn("Save", "70px", save);
+  btn("Export", "120px", exportHTML);
+
+  load();
+
+});
+</script>
+</body>
+</html>
