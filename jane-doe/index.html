@@ -928,34 +928,27 @@ function renderStars(idx,val){
   const stars=rows[idx].querySelectorAll('.star');
   stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
 }
-function previewStars(idx,val){
-  const rows=list.querySelectorAll('.ep-item');
-  const stars=rows[idx].querySelectorAll('.star');
-  stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
-}
-const editableSelectors = `
-.s1-name, .s1-role, .s1-summary,
-.edu-deg, .edu-sub,
-.stat-n, .stat-l,
-.tl-role, .tl-org, .tl-dur, .tl-pts li,
-.case-title, .case-body, .cm-t,
-.cert-title, .cert-desc,
-.p-title, .p-body,
-.lp-title, .lp-desc,
-.s7-tagline
-`;
-``
-</script>
-
 <script>
 window.addEventListener("DOMContentLoaded", () => {
 
   let editMode = false;
 
+  const editableSelectors = `
+    .s1-name, .s1-role, .s1-summary,
+    .edu-deg, .edu-sub,
+    .stat-n, .stat-l,
+    .tl-role, .tl-org, .tl-dur, .tl-pts li,
+    .case-title, .case-body, .cm-t,
+    .cert-title, .cert-desc,
+    .p-title, .p-body,
+    .lp-title, .lp-desc,
+    .s7-tagline
+  `;
+
   function toggleEditMode() {
     editMode = !editMode;
 
-    document.querySelectorAll(document.querySelectorAll(editableSelectors)).forEach(el => {
+    document.querySelectorAll(editableSelectors).forEach(el => {
       el.contentEditable = editMode;
       el.style.outline = editMode ? "2px dashed #4ac6e9" : "none";
     });
@@ -983,28 +976,24 @@ window.addEventListener("DOMContentLoaded", () => {
 
   function exportHTML() {
 
-    // ✅ Clone page (safe, does not affect your working version)
-    const clonedDoc = document.documentElement.cloneNode(true);
+    const clone = document.documentElement.cloneNode(true);
 
-    // ✅ Remove buttons from cloned file
-    const buttons = clonedDoc.querySelectorAll(".export-hide");
-    buttons.forEach(btn => btn.remove());
+    // ✅ remove ALL edit buttons
+    clone.querySelectorAll(".edit-ui").forEach(el => el.remove());
 
-    // ✅ Remove edit attributes
-    const editable = clonedDoc.querySelectorAll("[contenteditable]");
-    editable.forEach(el => el.removeAttribute("contenteditable"));
+    // ✅ remove edit mode artifacts
+    clone.querySelectorAll("[contenteditable]").forEach(el => {
+      el.removeAttribute("contenteditable");
+      el.style.outline = "none";
+    });
 
-    // ✅ Remove outlines
-    const outlined = clonedDoc.querySelectorAll("*");
-    outlined.forEach(el => el.style.outline = "none");
+    const html = "<!DOCTYPE html>\n" + clone.outerHTML;
 
-    const cleanHTML = "<!DOCTYPE html>\n" + clonedDoc.outerHTML;
-
-    const blob = new Blob([cleanHTML], { type: "text/html" });
+    const blob = new Blob([html], { type: "text/html" });
     const link = document.createElement("a");
 
     link.href = URL.createObjectURL(blob);
-    link.download = "candidate_presentation_clean.html";
+    link.download = "candidate_clean.html";
     link.click();
   }
 
@@ -1012,7 +1001,7 @@ window.addEventListener("DOMContentLoaded", () => {
     const btn = document.createElement("button");
 
     btn.innerText = text;
-    btn.className = "export-btn edit-ui";
+    btn.classList.add("edit-ui");
 
     btn.style.position = "fixed";
     btn.style.top = top;
@@ -1031,132 +1020,13 @@ window.addEventListener("DOMContentLoaded", () => {
     document.body.appendChild(btn);
   }
 
-  // ✅ Create buttons
   createButton("Edit Mode", "20px", toggleEditMode);
   createButton("Save", "70px", saveEdits);
   createButton("Export File", "120px", exportHTML);
 
-  // ✅ Load previous edits
   loadEdits();
 
 });
 </script>
-
-<script>
-window.addEventListener("DOMContentLoaded", () => {
-
-  let editMode = false;
-
-  const editableSelectors = `
-    .s1-name, .s1-role, .s1-summary,
-    .edu-deg, .edu-sub,
-    .stat-n, .stat-l,
-    .tl-role, .tl-org, .tl-dur, .tl-pts li,
-    .case-title, .case-body, .cm-t,
-    .cert-title, .cert-desc,
-    .p-title, .p-body,
-    .lp-title, .lp-desc,
-    .s7-tagline
-  `;
-
-  /* ✅ EDIT MODE */
-  function toggleEditMode() {
-    editMode = !editMode;
-
-    document.querySelectorAll(editableSelectors).forEach(el => {
-      el.contentEditable = editMode;
-      el.style.outline = editMode ? "2px dashed #4ac6e9" : "none";
-    });
-  }
-
-  /* ✅ SAVE */
-  function saveEdits() {
-    const data = [];
-
-    document.querySelectorAll(editableSelectors).forEach(el => {
-      data.push(el.innerHTML);
-    });
-
-    localStorage.setItem("candidateDeck", JSON.stringify(data));
-    alert("✅ Changes saved");
-  }
-
-  /* ✅ LOAD */
-  function loadEdits() {
-    const saved = JSON.parse(localStorage.getItem("candidateDeck"));
-    if (!saved) return;
-
-    document.querySelectorAll(editableSelectors).forEach((el, i) => {
-      if (saved[i]) el.innerHTML = saved[i];
-    });
-  }
-
-  /* ✅ CLEAN EXPORT */
-function exportHTML() {
-
-  const clone = document.documentElement.cloneNode(true);
-
-  // ✅ Remove ALL edit UI buttons
-  clone.querySelectorAll(".edit-ui, .export-btn").forEach(el => el.remove());
-
-  // ✅ Remove fixed top-right elements (fallback safety)
-  clone.querySelectorAll("button").forEach(btn => {
-    const style = btn.getAttribute("style") || "";
-    if (style.includes("position: fixed") && style.includes("right")) {
-      btn.remove();
-    }
-  });
-
-  // ✅ Remove edit mode artifacts
-  clone.querySelectorAll("[contenteditable]").forEach(el => {
-    el.removeAttribute("contenteditable");
-    el.style.outline = "none";
-  });
-
-  const html = "<!DOCTYPE html>\n" + clone.outerHTML;
-
-  const blob = new Blob([html], { type: "text/html" });
-  const link = document.createElement("a");
-
-  link.href = URL.createObjectURL(blob);
-  link.download = "candidate_clean.html";
-  link.click();
-}
-
-  /* ✅ BUTTON CREATOR */
-  function createButton(text, top, action) {
-    const btn = document.createElement("button");
-
-    btn.innerText = text;
-    btn.classList.add("export-btn");
-
-    btn.style.position = "fixed";
-    btn.style.top = top;
-    btn.style.right = "20px";
-    btn.style.zIndex = "9999";
-    btn.style.padding = "10px 14px";
-    btn.style.background = "#4ac6e9";
-    btn.style.color = "#002d6a";
-    btn.style.border = "none";
-    btn.style.borderRadius = "20px";
-    btn.style.cursor = "pointer";
-    btn.style.fontWeight = "600";
-
-    btn.onclick = action;
-
-    document.body.appendChild(btn);
-  }
-
-  /* ✅ ADD BUTTONS */
-  createButton("Edit Mode", "20px", toggleEditMode);
-  createButton("Save", "70px", saveEdits);
-  createButton("Export File", "120px", exportHTML);
-
-  /* ✅ LOAD SAVED DATA */
-  loadEdits();
-
-});
-</script>
-``
 </body>
 </html>
