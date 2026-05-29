@@ -927,8 +927,9 @@ function renderStars(idx,val){
   const rows=list.querySelectorAll('.ep-item');
   const stars=rows[idx].querySelectorAll('.star');
   stars.forEach((s,i)=>{s.classList.toggle('on',i<val);});
-}
-<script>
+}<script>
+try {
+
 window.addEventListener("DOMContentLoaded", () => {
 
   let editMode = false;
@@ -1032,7 +1033,10 @@ ${cleanDeck.outerHTML}
   loadEdits();
 
 });
+
+} catch (err) {
+  console.error("Script error:", err);
+}
 </script>
-``
 </body>
 </html>
